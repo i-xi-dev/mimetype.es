@@ -12,16 +12,21 @@ const {
 } = StringUtils.RangePattern;
 
 /**
+ * A media type parameter.
+ */
+type Parameter = [ string, string ];
+
+/**
  * 文字列の先頭からメディアタイプのタイプ名を抽出し返却
  * 
- * @param str - 文字列
+ * @param input - 文字列
  * @returns パース結果
  */
-function collectTypeName(str: string): CollectResult {
-  const u002FIndex = str.indexOf("/");
+function collectTypeName(input: string): CollectResult {
+  const u002FIndex = input.indexOf("/");
   let typeName = "";
   if (u002FIndex >= 0) {
-    typeName = str.substring(0, u002FIndex);
+    typeName = input.substring(0, u002FIndex);
   }
 
   return {
@@ -33,24 +38,24 @@ function collectTypeName(str: string): CollectResult {
 /**
  * 文字列の先頭からメディアタイプのサブタイプ名を抽出し返却
  * 
- * @param str 文字列
+ * @param input - 文字列
  * @returns パース結果
  */
-function collectSubtypeName(str: string): CollectResult {
+function collectSubtypeName(input: string): CollectResult {
   let subtypeName: string;
   let progression: number;
   let followingParameters = false;
-  if (str.includes(";")) {
+  if (input.includes(";")) {
     // 「;」あり（パラメーターあり）
-    const u003BIndex = str.indexOf(";");
-    subtypeName = str.substring(0, u003BIndex);
+    const u003BIndex = input.indexOf(";");
+    subtypeName = input.substring(0, u003BIndex);
     progression = u003BIndex;
     followingParameters = true;
   }
   else {
     // パラメーター無し
-    subtypeName = str;
-    progression = str.length;
+    subtypeName = input;
+    progression = input.length;
   }
 
   subtypeName = StringUtils.trimEnd(subtypeName, HTTP_WHITESPACE);
@@ -65,19 +70,19 @@ function collectSubtypeName(str: string): CollectResult {
 /**
  * 文字列の先頭からメディアタイプのパラメーター値終端位置を抽出し返却
  * 
- * @param str 文字列
+ * @param input - 文字列
  * @returns パラメーター値終端位置
  */
-function detectPrameterValueEnd(str: string): PrameterValueEnd {
+function detectPrameterValueEnd(input: string): PrameterValueEnd {
   let valueEndIndex = -1;
   let parseEnd = false;
-  const u003BIndex = str.indexOf(";");
+  const u003BIndex = input.indexOf(";");
   if (u003BIndex >= 0) {
     valueEndIndex = u003BIndex;
   }
 
   if (valueEndIndex < 0) {
-    valueEndIndex = str.length;
+    valueEndIndex = input.length;
     parseEnd = true;
   }
 
@@ -134,7 +139,7 @@ class MediaType {
    * @param parameterEntries パラメーターのエントリーの配列
    * @param original パース前の文字列
    */
-  private constructor(typeName: string, subtypeName: string, parameterEntries: Array<[ string, string ]> = [], original = "") {
+  private constructor(typeName: string, subtypeName: string, parameterEntries: Array<Parameter> = [], original = "") {
     if ((typeName.length <= 0) || (StringUtils.match(typeName, HTTP_TOKEN) !== true)) {
       throw new TypeError("typeName");
     }
@@ -161,14 +166,14 @@ class MediaType {
   }
 
   /**
-   * タイプ名
+   * The {@link [type](https://mimesniff.spec.whatwg.org/#type)} of this media type.
    */
   get type(): string {
     return this.#typeName;
   }
 
   /**
-   * サブタイプ名
+   * The {@link [subtype](https://mimesniff.spec.whatwg.org/#subtype)} of this media type.
    */
   get subtype(): string {
     return this.#subtypeName;
@@ -259,7 +264,7 @@ class MediaType {
     }
 
     // [mimesniff 4.4.]-11
-    const parameterEntries: Array<[ string, string ]> = [];
+    const parameterEntries: Array<Parameter> = [];
     while (work.length > 0) {
       // [mimesniff 4.4.]-11.1
       work = work.substring(1);
@@ -367,10 +372,10 @@ class MediaType {
   }
 
   /**
-   * 文字列表現を生成し返却
+   * Returns a serialized string representation.
    * 
    * @override
-   * @returns 文字列表現
+   * @returns A serialized string representation.
    */
   toString(): string {
     const parameterNames = [ ...this.#parameters.keys() ].sort();
@@ -391,9 +396,9 @@ class MediaType {
   }
 
   /**
-   * 文字列表現を生成し返却
+   * Returns a serialized string representation.
    * 
-   * @returns 文字列表現
+   * @returns A serialized string representation.
    */
   toJSON(): string {
     return this.toString();
@@ -405,7 +410,7 @@ class MediaType {
    * @param parameterEntries パラメーターのエントリーの配列
    * @returns 生成したインスタンス
    */
-  withParameters(parameterEntries: Array<[ string, string ]>): MediaType {
+  withParameters(parameterEntries: Array<Parameter>): MediaType {
     return new MediaType(this.#typeName, this.#subtypeName, parameterEntries);
   }
 
