@@ -1,6 +1,9 @@
 //
 
-import { StringUtils } from "@i-xi-dev/fundamental";
+import {
+  type CollectResult,
+  StringUtils,
+} from "@i-xi-dev/fundamental";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,
@@ -9,24 +12,12 @@ const {
 } = StringUtils.RangePattern;
 
 /**
- * 部品一つ抽出時のパース結果
- */
- type ParseResult = {
-  /** 抽出した部品 */
-  component: string,
-  /** カーソル位置 */
-  progression: number,
-  /** 次の部品が後続していない場合true */
-  parseEnd: boolean,
-};
-
-/**
  * 文字列の先頭からメディアタイプのタイプ名を抽出し返却
  * 
  * @param str - 文字列
  * @returns パース結果
  */
-function parseTypeName(str: string): ParseResult {
+function collectTypeName(str: string): CollectResult {
   const u002FIndex = str.indexOf("/");
   let typeName = "";
   if (u002FIndex >= 0) {
@@ -34,9 +25,8 @@ function parseTypeName(str: string): ParseResult {
   }
 
   return {
-    component: typeName,
+    collected: typeName,
     progression: typeName.length,
-    parseEnd: false, // 次のsubtypeは必須なのでチェックはしない（subtypeが取得できなければエラー）
   };
 }
 
@@ -46,29 +36,29 @@ function parseTypeName(str: string): ParseResult {
  * @param str 文字列
  * @returns パース結果
  */
-function parseSubtypeName(str: string): ParseResult {
+function collectSubtypeName(str: string): CollectResult {
   let subtypeName: string;
   let progression: number;
-  let noParameters = false;
+  let followingParameters = false;
   if (str.includes(";")) {
     // 「;」あり（パラメーターあり）
     const u003BIndex = str.indexOf(";");
     subtypeName = str.substring(0, u003BIndex);
     progression = u003BIndex;
+    followingParameters = true;
   }
   else {
     // パラメーター無し
     subtypeName = str;
     progression = str.length;
-    noParameters = true;
   }
 
   subtypeName = StringUtils.trimEnd(subtypeName, HTTP_WHITESPACE);
 
   return {
-    component: subtypeName,
+    collected: subtypeName,
     progression,
-    parseEnd: noParameters,
+    following: followingParameters,
   };
 }
 
@@ -244,7 +234,7 @@ class MediaType {
     // [mimesniff 4.4.]-1,2 削除済
 
     // [mimesniff 4.4.]-3
-    const { component: typeName, progression: typeNameLength } = parseTypeName(work);
+    const { collected: typeName, progression: typeNameLength } = collectTypeName(work);
     if (typeNameLength <= 0) {
       throw new TypeError("typeName");
     }
@@ -256,8 +246,8 @@ class MediaType {
     i = i + typeNameLength + 1;
 
     // [mimesniff 4.4.]-7,8
-    const { component: subtypeName, progression: subtypeNameEnd, parseEnd } = parseSubtypeName(work);
-    work = (parseEnd === true) ? "" : work.substring(subtypeNameEnd);
+    const { collected: subtypeName, progression: subtypeNameEnd, following } = collectSubtypeName(work);
+    work = (following === true) ? work.substring(subtypeNameEnd) : "";
     i = i + subtypeNameEnd;
 
     // [mimesniff 4.4.]-9 はコンストラクターではじかれる
@@ -276,7 +266,7 @@ class MediaType {
       i = i + 1;
 
       // [mimesniff 4.4.]-11.2
-      const startHttpSpaces2 = StringUtils.collectStart(work, HTTP_WHITESPACE);
+      const startHttpSpaces2 = StringUtils.collect(work, HTTP_WHITESPACE);
       work = work.substring(startHttpSpaces2.length);
       i = i + startHttpSpaces2.length;
 
@@ -328,10 +318,10 @@ class MediaType {
 
       if (work.startsWith('"')) {
         // [mimesniff 4.4.]-11.8.1
-        const { value, length } = StringUtils.collectHttpQuotedStringStart(work);
-        work = work.substring(length);
-        i = i + length;
-        parameterValue = value;
+        const { collected, progression } = StringUtils.collectHttpQuotedString(work);
+        work = work.substring(progression);
+        i = i + progression;
+        parameterValue = collected;
 
         // [mimesniff 4.4.]-11.8.2
         const { valueEndIndex, parseEnd } = detectPrameterValueEnd(work);
