@@ -419,3 +419,5 @@ class MediaType {
   }
 }
 Object.freeze(MediaType);
+
+export { MediaType };

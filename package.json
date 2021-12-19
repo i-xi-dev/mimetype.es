@@ -7,7 +7,6 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "node": "./node/index.mjs",
       "default": "./dist/index.js"
     }
   },
@@ -30,8 +29,7 @@
   },
   "homepage": "https://github.com/i-xi-dev/mimetype.es#readme",
   "files": [
-    "dist",
-    "node"
+    "dist"
   ],
   "engines": {
     "node": ">=16.5.0"
