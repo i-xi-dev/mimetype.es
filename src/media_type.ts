@@ -68,6 +68,17 @@ function collectSubtypeName(input: string): CollectResult {
 }
 
 /**
+ * パラメーター値終端位置
+ */
+ type PrameterValueEnd = {
+  /** パラメーター値終端位置のインデックス */
+  valueEndIndex: number,
+
+  /** 後続がパース不可能（または不要）であるか否か */
+  parseEnd: boolean,
+};
+
+/**
  * 文字列の先頭からメディアタイプのパラメーター値終端位置を抽出し返却
  * 
  * @param input - 文字列
@@ -91,21 +102,6 @@ function detectPrameterValueEnd(input: string): PrameterValueEnd {
     parseEnd,
   };
 }
-
-/**
- * パラメーター値終端位置
- */
- type PrameterValueEnd = {
-  /**
-   * パラメーター値終端位置のインデックス
-   */
-  valueEndIndex: number,
-
-  /**
-   * 後続がパース不可能（または不要）であるか否か
-   */
-  parseEnd: boolean,
-};
 
 /**
  * メディアタイプ

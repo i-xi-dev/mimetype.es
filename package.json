@@ -1,7 +1,7 @@
 {
   "name": "@i-xi-dev/mimetype",
   "version": "0.0.1",
-  "description": "",
+  "description": "A JavaScript MIME type object, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
