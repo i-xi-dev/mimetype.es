@@ -110,7 +110,7 @@ type CompareOptions = {
   /**
    * パラメーター値の大文字小文字を無視するパラメーターのパラメーター名のセット
    */
-  caseInsensitiveParameters: Set<string>;
+  caseInsensitiveParameters: Array<string>;
 };
 
 /**
@@ -203,45 +203,45 @@ class MediaType {
     return this.#original;
   }
 
-  static application(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("application", subtypeName, parameterEntries);
-  }
+  // static application(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("application", subtypeName, parameterEntries);
+  // }
 
-  static audio(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("audio", subtypeName, parameterEntries);
-  }
+  // static audio(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("audio", subtypeName, parameterEntries);
+  // }
 
-  static example(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("example", subtypeName, parameterEntries);
-  }
+  // static example(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("example", subtypeName, parameterEntries);
+  // }
 
-  static font(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("font", subtypeName, parameterEntries);
-  }
+  // static font(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("font", subtypeName, parameterEntries);
+  // }
 
-  static image(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("image", subtypeName, parameterEntries);
-  }
+  // static image(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("image", subtypeName, parameterEntries);
+  // }
 
-  static message(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("message", subtypeName, parameterEntries);
-  }
+  // static message(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("message", subtypeName, parameterEntries);
+  // }
 
-  static model(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("model", subtypeName, parameterEntries);
-  }
+  // static model(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("model", subtypeName, parameterEntries);
+  // }
 
-  static multipart(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("multipart", subtypeName, parameterEntries);
-  }
+  // static multipart(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("multipart", subtypeName, parameterEntries);
+  // }
 
-  static text(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("text", subtypeName, parameterEntries);
-  }
+  // static text(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("text", subtypeName, parameterEntries);
+  // }
 
-  static video(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-    return new MediaType("video", subtypeName, parameterEntries);
-  }
+  // static video(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+  //   return new MediaType("video", subtypeName, parameterEntries);
+  // }
 
   /**
    * 文字列からインスタンスを生成し返却
@@ -439,9 +439,28 @@ class MediaType {
     return this.#parameters.entries();
   }
 
-  equals(value: unknown, options: CompareOptions): boolean {//TODO
-    if (value instanceof MediaType) {
-      return (this.#format(true) === value.#format(true));
+  equals(obj: unknown, options: CompareOptions): boolean { // TODO
+    if (obj instanceof MediaType) {
+      if (Array.isArray(options?.caseInsensitiveParameters)) {
+        const thisParams = [ ...this.parameterEntries() ].map(([ paramName, paramValue ]) => {
+          return [
+            paramName,
+            options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
+          ] as Parameter;
+        });
+        const thisClone = new MediaType(this.type, this.subtype, thisParams);
+
+        const objParams = [ ...obj.parameterEntries() ].map(([ paramName, paramValue ]) => {
+          return [
+            paramName,
+            options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
+          ] as Parameter;
+        });
+        const objClone = new MediaType(obj.type, obj.subtype, objParams);
+
+        return (thisClone.#format(true) === objClone.#format(true));
+      }
+      return (this.#format(true) === obj.#format(true));
     }
     return false;
   }
