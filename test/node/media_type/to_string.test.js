@@ -22,7 +22,7 @@ describe("MediaType.prototype.toString", () => {
     assert.strictEqual(i5.toString(), "text/plain;charset=\"uTf-8 \";x=9");
 
     const i6 = MediaType.fromString("text/plain;y=7; charset=uTf-8 ; x=9");
-    assert.strictEqual(i6.toString(), "text/plain;charset=uTf-8;x=9;y=7");
+    assert.strictEqual(i6.toString(), "text/plain;y=7;charset=uTf-8;x=9");
 
   });
 

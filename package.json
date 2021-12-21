@@ -1,7 +1,7 @@
 {
   "name": "@i-xi-dev/mimetype",
   "version": "0.0.1",
-  "description": "A JavaScript MIME type object, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
+  "description": "A JavaScript MIME type parser and serializer, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,7 +21,13 @@
     "type": "git",
     "url": "git+https://github.com/i-xi-dev/mimetype.es.git"
   },
-  "keywords": [],
+  "keywords": [
+    "mimetype",
+    "mediatype",
+    "browser",
+    "deno",
+    "nodejs"
+  ],
   "author": "i-xi-dev",
   "license": "MIT",
   "bugs": {

@@ -193,30 +193,44 @@ class MediaType {
     return this.#original;
   }
 
-  /**
-   * パラメーターを持っているか否かを返却
-   * 
-   * @param parameterName パラメーター名
-   * @returns パラメーターを持っているか否か
-   */
-  hasParameter(parameterName: string): boolean {
-    const normalizedName = parameterName.toLowerCase();
-    return this.#parameters.has(normalizedName);
+  static application(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("application", subtypeName, parameterEntries);
   }
 
-  /**
-   * パラメーター値を返却
-   * パラメーター名から値を取得できなかった場合nullを返却
-   * 
-   * @param parameterName パラメーター名
-   * @returns パラメーター値
-   */
-  getParameterValue(parameterName: string): string | null {
-    const normalizedName = parameterName.toLowerCase();
-    if (this.#parameters.has(normalizedName) !== true) {
-      return null;
-    }
-    return this.#parameters.get(normalizedName) as string;
+  static audio(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("audio", subtypeName, parameterEntries);
+  }
+
+  static example(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("example", subtypeName, parameterEntries);
+  }
+
+  static font(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("font", subtypeName, parameterEntries);
+  }
+
+  static image(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("image", subtypeName, parameterEntries);
+  }
+
+  static message(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("message", subtypeName, parameterEntries);
+  }
+
+  static model(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("model", subtypeName, parameterEntries);
+  }
+
+  static multipart(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("multipart", subtypeName, parameterEntries);
+  }
+
+  static text(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("text", subtypeName, parameterEntries);
+  }
+
+  static video(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
+    return new MediaType("video", subtypeName, parameterEntries);
   }
 
   /**
@@ -367,14 +381,11 @@ class MediaType {
     return new MediaType(typeName, subtypeName, parameterEntries, trimmedText.substring(0, i));
   }
 
-  /**
-   * Returns a serialized string representation.
-   * 
-   * @override
-   * @returns A serialized string representation.
-   */
-  toString(): string {
-    const parameterNames = [ ...this.#parameters.keys() ].sort();
+  #format(sortParameters = false): string {
+    const parameterNames = [ ...this.#parameters.keys() ];
+    if (sortParameters === true) {
+      parameterNames.sort();
+    }
     let parameters = "";
     for (const parameterName of parameterNames) {
       parameters = parameters + ";" + parameterName + "=";
@@ -394,10 +405,53 @@ class MediaType {
   /**
    * Returns a serialized string representation.
    * 
+   * @override
+   * @returns A serialized string representation.
+   */
+  toString(): string {
+    return this.#format();
+  }
+
+  /**
+   * Returns a serialized string representation.
+   * 
    * @returns A serialized string representation.
    */
   toJSON(): string {
     return this.toString();
+  }
+
+  equals(value: unknown): boolean {
+    if (value instanceof MediaType) {
+      return (this.#format(true) === value.#format(true));
+    }
+    return false;
+  }
+
+  /**
+   * パラメーターを持っているか否かを返却
+   * 
+   * @param parameterName パラメーター名
+   * @returns パラメーターを持っているか否か
+   */
+  hasParameter(parameterName: string): boolean {
+    const normalizedName = parameterName.toLowerCase();
+    return this.#parameters.has(normalizedName);
+  }
+
+  /**
+   * パラメーター値を返却
+   * パラメーター名から値を取得できなかった場合nullを返却
+   * 
+   * @param parameterName パラメーター名
+   * @returns パラメーター値
+   */
+  getParameterValue(parameterName: string): string | null {
+    const normalizedName = parameterName.toLowerCase();
+    if (this.#parameters.has(normalizedName) !== true) {
+      return null;
+    }
+    return this.#parameters.get(normalizedName) as string;
   }
 
   /**

@@ -22,7 +22,7 @@ describe("MediaType.prototype.withParameters", () => {
     assert.strictEqual(i5.withParameters([]).toString(), "text/plain");
 
     const i6 = MediaType.fromString("text/plain;  charset=\"uTf-8 \"; x=9");
-    assert.strictEqual(i6.withParameters([["hoge","http://"],["charset","utf-16be"]]).toString(), "text/plain;charset=utf-16be;hoge=\"http://\"");
+    assert.strictEqual(i6.withParameters([["hoge","http://"],["charset","utf-16be"]]).toString(), "text/plain;hoge=\"http://\";charset=utf-16be");
     assert.strictEqual(i6.toString(), "text/plain;charset=\"uTf-8 \";x=9");
 
   });

@@ -28,8 +28,8 @@ describe("MediaType.fromString", () => {
     assert.strictEqual(MediaType.fromString("text/plain ;charset=\"\\").toString(), "text/plain;charset=\"\\\\\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset="aa\\\\a\\"a"').toString(), "text/plain;charset=\"aa\\\\a\\\"a\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset=a;x="http://example.com/x?a=1"').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
+    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=a");
+    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=a");
     assert.strictEqual(MediaType.fromString("text/plain ;charset=utf-8;test=test2;charset=shift_jis").toString(), "text/plain;charset=utf-8;test=test2");
 
     assert.throws(() => {
@@ -67,8 +67,8 @@ describe("MediaType.fromString", () => {
     assert.strictEqual(MediaType.fromString("text/plain ;charset=\"\\,").toString(), "text/plain;charset=\",\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset="aa\\\\a\\"a",').toString(), "text/plain;charset=\"aa\\\\a\\\"a\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset=a;x="http://example.com/x?a=1",').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a,').toString(), "text/plain;charset=\"a,\";x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a,').toString(), "text/plain;charset=\"a,\";x=\"http://example.com/x?a=1\"");
+    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a,').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=\"a,\"");
+    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a,').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=\"a,\"");
     assert.strictEqual(MediaType.fromString("text/plain ;charset=utf-8;test=test2;charset=shift_jis,").toString(), "text/plain;charset=utf-8;test=test2");
 
     assert.throws(() => {
@@ -106,8 +106,8 @@ describe("MediaType.fromString", () => {
     assert.strictEqual(MediaType.fromString("text/plain ;charset=\"\\,%3C").toString(), "text/plain;charset=\",%3C\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset="aa\\\\a\\"a",%3C').toString(), "text/plain;charset=\"aa\\\\a\\\"a\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset=a;x="http://example.com/x?a=1",%3C').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a,%3C').toString(), "text/plain;charset=\"a,%3C\";x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a,%3C').toString(), "text/plain;charset=\"a,%3C\";x=\"http://example.com/x?a=1\"");
+    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a,%3C').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=\"a,%3C\"");
+    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a,%3C').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=\"a,%3C\"");
     assert.strictEqual(MediaType.fromString("text/plain ;charset=utf-8;test=test2;charset=shift_jis,%3C").toString(), "text/plain;charset=utf-8;test=test2");
 
     assert.strictEqual(MediaType.fromString("text/plain;base64,").toString(), "text/plain");
@@ -135,8 +135,8 @@ describe("MediaType.fromString", () => {
     assert.strictEqual(MediaType.fromString("text/plain ;charset=\"\\;base64,").toString(), "text/plain;charset=\";base64,\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset="aa\\\\a\\"a";base64,').toString(), "text/plain;charset=\"aa\\\\a\\\"a\"");
     assert.strictEqual(MediaType.fromString('text/plain ;charset=a;x="http://example.com/x?a=1";base64,').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a;base64,').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
-    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a;base64,').toString(), "text/plain;charset=a;x=\"http://example.com/x?a=1\"");
+    assert.strictEqual(MediaType.fromString('text/plain ;x="http://example.com/x?a=1";charset=a;base64,').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=a");
+    assert.strictEqual(MediaType.fromString('text/plain ; x="http://example.com/x?a=1" ;charset=a;base64,').toString(), "text/plain;x=\"http://example.com/x?a=1\";charset=a");
     assert.strictEqual(MediaType.fromString("text/plain ;charset=utf-8;test=test2;charset=shift_jis;base64,").toString(), "text/plain;charset=utf-8;test=test2");
 
     assert.throws(() => {
