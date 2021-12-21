@@ -48,14 +48,14 @@ mediaType.subtype;
 mediaType.essence;
 // → "application/soap+xml"
 
-[ ...mediaType.parameterNames() ]
+[ ...mediaType.parameterNames() ];
 // → [ "charset", "action" ]
 
-[ ...mediaType.parameterEntries() ]
+[ ...mediaType.parameterEntries() ];
 // → [ ["charset", "utf-8"], ["action", "https://example.com/example"] ]
 
-mediaType.getParameterValue("charset");
-// → "utf-8"
+mediaType.hasParameter("charset");
+// → true
 
 mediaType.getParameterValue("action");
 // → "https://example.com/example"
@@ -76,18 +76,20 @@ const mediaType2 = MediaType.fromString('application/soap+xml; charset=utf-16;ac
 mediaType.equals(mediaType2);
 // → false
 
-const mediaType3 = MediaType.fromString('APPLICATION/SOAP+XML;ACTION="https://example.com/example";charset=utf-8');
+const mediaType3 = MediaType.fromString('APPLICATION/SOAP+XML;ACTION="https://example.com/example";CHARSET=utf-8');
 mediaType.equals(mediaType3);
 // → true
 
 const mediaType4 = MediaType.fromString('application/soap+xml; charset=UTF-8;action="https://example.com/example"');
 mediaType.equals(mediaType4);
 // → false
+mediaType.equals(mediaType4, { TODO });
+// → true
 ```
 
 Instance is immutable
 ```javascript
-
+TODO
 ```
 
 
