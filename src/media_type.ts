@@ -104,6 +104,16 @@ function detectPrameterValueEnd(input: string): PrameterValueEnd {
 }
 
 /**
+ * 比較オプション
+ */
+type CompareOptions = {
+  /**
+   * パラメーター値の大文字小文字を無視するパラメーターのパラメーター名のセット
+   */
+  caseInsensitiveParameters: Set<string>;
+};
+
+/**
  * メディアタイプ
  *     不変オブジェクト
  */
@@ -153,7 +163,7 @@ class MediaType {
       throw new TypeError("parameterEntries");
     }
 
-    this.#typeName = typeName;
+    this.#typeName = typeName.toLowerCase();
     this.#subtypeName = subtypeName.toLowerCase();
     this.#parameters = parameterMap;
     this.#original = original;
@@ -421,7 +431,15 @@ class MediaType {
     return this.toString();
   }
 
-  equals(value: unknown): boolean {
+  parameterNames(): IterableIterator<string> {
+    return this.#parameters.keys();
+  }
+
+  parameterEntries(): IterableIterator<Parameter> {
+    return this.#parameters.entries();
+  }
+
+  equals(value: unknown, options: CompareOptions): boolean {//TODO
     if (value instanceof MediaType) {
       return (this.#format(true) === value.#format(true));
     }
