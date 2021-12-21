@@ -142,10 +142,10 @@ class MediaType {
   /**
    * @param typeName タイプ名
    * @param subtypeName サブタイプ名
-   * @param parameterEntries パラメーターのエントリーの配列
+   * @param parameters パラメーターのエントリーの配列
    * @param original パース前の文字列
    */
-  private constructor(typeName: string, subtypeName: string, parameterEntries: Array<Parameter> = [], original = "") {
+  private constructor(typeName: string, subtypeName: string, parameters: Array<Parameter> = [], original = "") {
     if ((typeName.length <= 0) || (StringUtils.match(typeName, HTTP_TOKEN) !== true)) {
       throw new TypeError("typeName");
     }
@@ -153,14 +153,14 @@ class MediaType {
       throw new TypeError("subtypeName");
     }
 
-    const parameterMap = new Map(parameterEntries.map((entry) => {
+    const parameterMap = new Map(parameters.map((entry) => {
       return [
         entry[0].toLowerCase(),
         entry[1],
       ];
     }));
-    if (parameterEntries.length !== parameterMap.size) {
-      throw new TypeError("parameterEntries");
+    if (parameters.length !== parameterMap.size) {
+      throw new TypeError("parameters");
     }
 
     this.#typeName = typeName.toLowerCase();
@@ -203,44 +203,44 @@ class MediaType {
     return this.#original;
   }
 
-  // static application(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("application", subtypeName, parameterEntries);
+  // static application(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("application", subtypeName, parameters);
   // }
 
-  // static audio(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("audio", subtypeName, parameterEntries);
+  // static audio(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("audio", subtypeName, parameters);
   // }
 
-  // static example(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("example", subtypeName, parameterEntries);
+  // static example(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("example", subtypeName, parameters);
   // }
 
-  // static font(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("font", subtypeName, parameterEntries);
+  // static font(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("font", subtypeName, parameters);
   // }
 
-  // static image(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("image", subtypeName, parameterEntries);
+  // static image(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("image", subtypeName, parameters);
   // }
 
-  // static message(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("message", subtypeName, parameterEntries);
+  // static message(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("message", subtypeName, parameters);
   // }
 
-  // static model(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("model", subtypeName, parameterEntries);
+  // static model(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("model", subtypeName, parameters);
   // }
 
-  // static multipart(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("multipart", subtypeName, parameterEntries);
+  // static multipart(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("multipart", subtypeName, parameters);
   // }
 
-  // static text(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("text", subtypeName, parameterEntries);
+  // static text(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("text", subtypeName, parameters);
   // }
 
-  // static video(subtypeName: string, parameterEntries?: Array<Parameter>): MediaType {
-  //   return new MediaType("video", subtypeName, parameterEntries);
+  // static video(subtypeName: string, parameters?: Array<Parameter>): MediaType {
+  //   return new MediaType("video", subtypeName, parameters);
   // }
 
   /**
@@ -435,14 +435,14 @@ class MediaType {
     return this.#parameters.keys();
   }
 
-  parameterEntries(): IterableIterator<Parameter> {
+  parameters(): IterableIterator<Parameter> {
     return this.#parameters.entries();
   }
 
   equals(obj: unknown, options: CompareOptions): boolean { // TODO
     if (obj instanceof MediaType) {
       if (Array.isArray(options?.caseInsensitiveParameters)) {
-        const thisParams = [ ...this.parameterEntries() ].map(([ paramName, paramValue ]) => {
+        const thisParams = [ ...this.parameters() ].map(([ paramName, paramValue ]) => {
           return [
             paramName,
             options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
@@ -450,7 +450,7 @@ class MediaType {
         });
         const thisClone = new MediaType(this.type, this.subtype, thisParams);
 
-        const objParams = [ ...obj.parameterEntries() ].map(([ paramName, paramValue ]) => {
+        const objParams = [ ...obj.parameters() ].map(([ paramName, paramValue ]) => {
           return [
             paramName,
             options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
@@ -494,11 +494,11 @@ class MediaType {
   /**
    * パラメーターを入れ替えた新たなインスタンスを生成し返却
    * 
-   * @param parameterEntries パラメーターのエントリーの配列
+   * @param parameters パラメーターのエントリーの配列
    * @returns 生成したインスタンス
    */
-  withParameters(parameterEntries: Array<Parameter>): MediaType {
-    return new MediaType(this.#typeName, this.#subtypeName, parameterEntries);
+  withParameters(parameters: Array<Parameter>): MediaType {
+    return new MediaType(this.#typeName, this.#subtypeName, parameters);
   }
 
   /**

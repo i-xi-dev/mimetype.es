@@ -51,7 +51,7 @@ mediaType.essence;
 [ ...mediaType.parameterNames() ];
 // → [ "charset", "action" ]
 
-[ ...mediaType.parameterEntries() ];
+[ ...mediaType.parameters() ];
 // → [ ["charset", "utf-8"], ["action", "https://example.com/example"] ]
 
 mediaType.hasParameter("charset");
@@ -83,14 +83,20 @@ mediaType.equals(mediaType3);
 const mediaType4 = MediaType.fromString('application/soap+xml; charset=UTF-8;action="https://example.com/example"');
 mediaType.equals(mediaType4);
 // → false
-mediaType.equals(mediaType4, { TODO });
+mediaType.equals(mediaType4, { caseInsensitiveParameters: ["charset"] });
 // → true
 ```
 
 Instance is immutable
 ```javascript
-TODO
+const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
+
+const mediaType2 = mediaType.withParameters([ ["charset": "UTF-16"] ]);
+mediaType2.toString();
+// → 'application/soap+xml;charset=UTF-16'
+const mediaType3 = mediaType.withoutParameters();
+mediaType3.toString();
+// → 'application/soap+xml'
+mediaType.toString();
+// → 'application/soap+xml;charset=utf-8;action="https://example.com/example"'
 ```
-
-
-
