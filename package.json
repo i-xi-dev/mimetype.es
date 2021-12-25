@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/mimetype",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A JavaScript MIME type parser and serializer, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
   "type": "module",
   "main": "./dist/index.js",

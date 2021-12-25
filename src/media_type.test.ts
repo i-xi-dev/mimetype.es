@@ -106,6 +106,9 @@ describe("MediaType.fromString", () => {
     expect(MediaType.fromString("text/plain ; ,").toString()).toBe("text/plain");
     expect(MediaType.fromString("text/plain ; charset,").toString()).toBe("text/plain");
     expect(MediaType.fromString("text/plain ; charset ,").toString()).toBe("text/plain");
+    expect(MediaType.fromString("text/plain ; charset= ;p2=3").toString()).toBe("text/plain;p2=3");
+    expect(MediaType.fromString("text/plain ; p1=1;=3;p3=4").toString()).toBe("text/plain;p1=1;p3=4");
+    expect(MediaType.fromString("text/plain ; p1=1;p2=あ;p3=4").toString()).toBe("text/plain;p1=1;p3=4");
     expect(MediaType.fromString("text/plain ; charset=utf-8 ,").toString()).toBe("text/plain;charset=\"utf-8 ,\"");
     expect(MediaType.fromString("text/plain ;charset=UTF-8,").toString()).toBe("text/plain;charset=\"UTF-8,\"");
     expect(MediaType.fromString("text/plain ;charset=utf-8;test,").toString()).toBe("text/plain;charset=utf-8");
@@ -206,7 +209,28 @@ describe("MediaType.fromString", () => {
     });
 
     expect(() => {
+      MediaType.fromString("あ");
+    }).toThrowError({
+      name: "TypeError",
+      message: "typeName"
+    });
+
+    expect(() => {
+      MediaType.fromString("あ/");
+    }).toThrowError({
+      name: "TypeError",
+      message: "typeName"
+    });
+
+    expect(() => {
       MediaType.fromString("text/");
+    }).toThrowError({
+      name: "TypeError",
+      message: "subtypeName"
+    });
+
+    expect(() => {
+      MediaType.fromString("text/;");
     }).toThrowError({
       name: "TypeError",
       message: "subtypeName"
@@ -304,7 +328,7 @@ describe("MediaType.prototype.originalString", () => {
     const i0c = MediaType.fromString("text/plain; charset=Utf-8  ");
     expect(i0c.originalString).toBe("text/plain; charset=Utf-8");
     expect(i0c.toString()).toBe("text/plain;charset=Utf-8");
-    expect(i0c.withParameters([["charset","utf-8"]]).originalString).toBe("text/plain;charset=Utf-8");
+    expect(i0c.withParameters([["charset","utf-8"]]).originalString).toBe("text/plain;charset=utf-8");
 
   });
 
@@ -448,6 +472,14 @@ describe("MediaType.prototype.withParameters", () => {
     const i6 = MediaType.fromString("text/plain;  charset=\"uTf-8 \"; x=9");
     expect(i6.withParameters([["hoge","http://"],["charset","utf-16be"]]).toString()).toBe("text/plain;hoge=\"http://\";charset=utf-16be");
     expect(i6.toString()).toBe("text/plain;charset=\"uTf-8 \";x=9");
+
+    const i7 = MediaType.fromString("text/plain");
+    expect(() => {
+      i7.withParameters([["a","1"],["a","2"]]);
+    }).toThrowError({
+      name: "TypeError",
+      message: "parameters"
+    });
 
   });
 
