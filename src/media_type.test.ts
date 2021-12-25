@@ -292,3 +292,188 @@ describe("MediaType.prototype.hasParameter", () => {
   });
 
 });
+
+describe("MediaType.prototype.originalString", () => {
+  it("originalString", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(i0.originalString).toBe("text/plain");
+
+    const i0b = MediaType.fromString("text/plain ");
+    expect(i0b.originalString).toBe("text/plain");
+
+    const i0c = MediaType.fromString("text/plain; charset=Utf-8  ");
+    expect(i0c.originalString).toBe("text/plain; charset=Utf-8");
+    expect(i0c.toString()).toBe("text/plain;charset=Utf-8");
+    expect(i0c.withParameters([["charset","utf-8"]]).originalString).toBe("text/plain;charset=Utf-8");
+
+  });
+
+});
+
+describe("MediaType.prototype.parameterNames", () => {
+  it("parameterNames()", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(JSON.stringify([...i0.parameterNames()])).toBe("[]");
+
+    const i0b = MediaType.fromString("text/plain;charset=utf-8");
+    expect(JSON.stringify([...i0b.parameterNames()])).toBe('["charset"]');
+
+    const i0c = MediaType.fromString("text/plain;charset=utf-8; a=,");
+    expect(JSON.stringify([...i0c.parameterNames()])).toBe('["charset","a"]');
+
+    let i = 0;
+    for (const p of i0c.parameterNames()) {
+      if (i === 0) {
+        expect(JSON.stringify(p)).toBe('"charset"');
+      }
+      else if (i === 1) {
+        expect(JSON.stringify(p)).toBe('"a"');
+      }
+
+      i++;
+    }
+    expect(i).toBe(2);
+
+  });
+
+});
+
+describe("MediaType.prototype.parameters", () => {
+  it("parameters()", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(JSON.stringify([...i0.parameters()])).toBe("[]");
+
+    const i0b = MediaType.fromString("text/plain;charset=utf-8");
+    expect(JSON.stringify([...i0b.parameters()])).toBe('[["charset","utf-8"]]');
+
+    const i0c = MediaType.fromString("text/plain;charset=utf-8; a=,");
+    expect(JSON.stringify([...i0c.parameters()])).toBe('[["charset","utf-8"],["a",","]]');
+
+    let i = 0;
+    for (const p of i0c.parameters()) {
+      if (i === 0) {
+        expect(JSON.stringify(p)).toBe('["charset","utf-8"]');
+      }
+      else if (i === 1) {
+        expect(JSON.stringify(p)).toBe('["a",","]');
+      }
+
+      i++;
+    }
+    expect(i).toBe(2);
+
+  });
+
+});
+
+describe("MediaType.prototype.subtype", () => {
+  it("subtype", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(i0.subtype).toBe("plain");
+
+    const i0b = MediaType.fromString("text/PLAIN");
+    expect(i0b.subtype).toBe("plain");
+
+  });
+
+});
+
+describe("MediaType.prototype.toJSON", () => {
+  it("toJSON()", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(i0.toJSON()).toBe("text/plain");
+
+    expect(JSON.stringify({x:1,y:i0})).toBe('{"x":1,"y":"text/plain"}');
+
+  });
+
+});
+
+describe("MediaType.prototype.toString", () => {
+  it("toString()", () => {
+    const i0 = MediaType.fromString("text/PLAIN");
+    expect(i0.toString()).toBe("text/plain");
+
+    const i1 = MediaType.fromString("text/plain;charset=uTf-8");
+    expect(i1.toString()).toBe("text/plain;charset=uTf-8");
+
+    const i2 = MediaType.fromString("text/plain;CHARSET=uTf-8 ");
+    expect(i2.toString()).toBe("text/plain;charset=uTf-8");
+
+    const i3 = MediaType.fromString("text/plain;charset=uTf-8 ; x=9");
+    expect(i3.toString()).toBe("text/plain;charset=uTf-8;x=9");
+
+    const i4 = MediaType.fromString("text/plain;charset=\"uTf-8\" ; x=9");
+    expect(i4.toString()).toBe("text/plain;charset=uTf-8;x=9");
+
+    const i5 = MediaType.fromString("text/plain;  charset=\"uTf-8 \"; x=9");
+    expect(i5.toString()).toBe("text/plain;charset=\"uTf-8 \";x=9");
+
+    const i6 = MediaType.fromString("text/plain;y=7; charset=uTf-8 ; x=9");
+    expect(i6.toString()).toBe("text/plain;y=7;charset=uTf-8;x=9");
+
+  });
+
+});
+
+describe("MediaType.prototype.type", () => {
+  it("type", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(i0.type).toBe("text");
+
+  });
+
+});
+
+describe("MediaType.prototype.withParameters", () => {
+  it("withParameters(Array)", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(i0.withParameters([]).toString()).toBe("text/plain");
+
+    const i1 = MediaType.fromString("text/plain;charset=uTf-8");
+    expect(i1.withParameters([]).toString()).toBe("text/plain");
+
+    const i2 = MediaType.fromString("text/plain;CHARSET=uTf-8 ");
+    expect(i2.withParameters([]).toString()).toBe("text/plain");
+
+    const i3 = MediaType.fromString("text/plain;charset=uTf-8 ; x=9");
+    expect(i3.withParameters([]).toString()).toBe("text/plain");
+
+    const i4 = MediaType.fromString("text/plain;charset=\"uTf-8\" ; x=9");
+    expect(i4.withParameters([]).toString()).toBe("text/plain");
+
+    const i5 = MediaType.fromString("text/plain;  charset=\"uTf-8 \"; x=9");
+    expect(i5.withParameters([]).toString()).toBe("text/plain");
+
+    const i6 = MediaType.fromString("text/plain;  charset=\"uTf-8 \"; x=9");
+    expect(i6.withParameters([["hoge","http://"],["charset","utf-16be"]]).toString()).toBe("text/plain;hoge=\"http://\";charset=utf-16be");
+    expect(i6.toString()).toBe("text/plain;charset=\"uTf-8 \";x=9");
+
+  });
+
+});
+
+describe("MediaType.prototype.withoutParameters", () => {
+  it("withoutParameters()", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(i0.withoutParameters().toString()).toBe("text/plain");
+
+    const i1 = MediaType.fromString("text/plain;charset=uTf-8");
+    expect(i1.withoutParameters().toString()).toBe("text/plain");
+
+    const i2 = MediaType.fromString("text/plain;CHARSET=uTf-8 ");
+    expect(i2.withoutParameters().toString()).toBe("text/plain");
+
+    const i3 = MediaType.fromString("text/plain;charset=uTf-8 ; x=9");
+    expect(i3.withoutParameters().toString()).toBe("text/plain");
+
+    const i4 = MediaType.fromString("text/plain;charset=\"uTf-8\" ; x=9");
+    expect(i4.withoutParameters().toString()).toBe("text/plain");
+
+    const i5 = MediaType.fromString("text/plain;  charset=\"uTf-8 \"; x=9");
+    expect(i5.withoutParameters().toString()).toBe("text/plain");
+    expect(i5.toString()).toBe("text/plain;charset=\"uTf-8 \";x=9");
+
+  });
+
+});
