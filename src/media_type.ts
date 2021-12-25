@@ -439,9 +439,9 @@ class MediaType {
     return this.#parameters.entries();
   }
 
-  equals(obj: unknown, options: CompareOptions): boolean { // TODO
+  equals(obj: unknown, options?: CompareOptions): boolean { // TODO
     if (obj instanceof MediaType) {
-      if (Array.isArray(options?.caseInsensitiveParameters)) {
+      if (options && Array.isArray(options.caseInsensitiveParameters)) {
         const thisParams = [ ...this.parameters() ].map(([ paramName, paramValue ]) => {
           return [
             paramName,
