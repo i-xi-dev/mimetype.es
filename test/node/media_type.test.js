@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { MediaType } from "./media_type";
+import { MediaType } from "../../dist/index.js";
 
 describe("MediaType.prototype.equals", () => {
   it("equals(Object)", () => {
@@ -13,7 +13,7 @@ describe("MediaType.prototype.equals", () => {
     const i0d = MediaType.fromString("test1/test2;a=X1;b=2;c=3");
     assert.strictEqual(i0.equals(i0), true);
     assert.strictEqual(i0.equals(i1), true);
-    assert.strictEqual(i0.equals(undefined as unknown as MediaType), false);
+    assert.strictEqual(i0.equals(), false);
     assert.strictEqual(i0.equals(i2), false);
     assert.strictEqual(i0.equals(i3), false);
     assert.strictEqual(i0.equals(i4), false);
