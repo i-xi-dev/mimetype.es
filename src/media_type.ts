@@ -12,7 +12,7 @@ const {
 } = StringUtils.RangePattern;
 
 /**
- * A string tuple represents a MIME type parameter.
+ * The string tuple represents a MIME type parameter.
  */
 type MediaTypeParameter = [ name: string, value: string ];
 
@@ -104,11 +104,11 @@ function detectPrameterValueEnd(input: string): PrameterValueEnd {
 }
 
 /**
- * 比較オプション
+ * The `MediaType` equivalent comparison option.
  */
 type MediaTypeCompareOptions = {
   /**
-   * パラメーター値の大文字小文字を無視するパラメーターのパラメーター名のセット
+   * The set of parameter names that ignores the case of the parameter value.
    */
   caseInsensitiveParameters: Array<string>;
 };
@@ -144,6 +144,9 @@ class MediaType {
    * @param subtypeName - The subtype of the MIME type.
    * @param parameters パラメーターのエントリーの配列
    * @param original - The original string that was passed to the `fromString` method.
+   * @throws {TypeError} The `typeName` is empty or contains invalid characters.
+   * @throws {TypeError} The `subtypeName` is empty or contains invalid characters.
+   * @throws {TypeError} The `parameters` contains duplicate parameters.
    */
   private constructor(typeName: string, subtypeName: string, parameters: Array<MediaTypeParameter> = [], original = "") {
     if ((typeName.length <= 0) || (StringUtils.match(typeName, HTTP_TOKEN) !== true)) {
@@ -203,52 +206,22 @@ class MediaType {
     return this.#original;
   }
 
-  // static application(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("application", subtypeName, parameters);
-  // }
-
-  // static audio(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("audio", subtypeName, parameters);
-  // }
-
-  // static example(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("example", subtypeName, parameters);
-  // }
-
-  // static font(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("font", subtypeName, parameters);
-  // }
-
-  // static image(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("image", subtypeName, parameters);
-  // }
-
-  // static message(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("message", subtypeName, parameters);
-  // }
-
-  // static model(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("model", subtypeName, parameters);
-  // }
-
-  // static multipart(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("multipart", subtypeName, parameters);
-  // }
-
-  // static text(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("text", subtypeName, parameters);
-  // }
-
-  // static video(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
-  //   return new MediaType("video", subtypeName, parameters);
-  // }
+  // static create = Object.freeze({
+  //   applicationType(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
+  //     return new MediaType("application", subtypeName, parameters);
+  //   },
+  //   audio,example,font,image,message,model,multipart,text,video
+  // }) as ;
 
   /**
-   * 文字列からインスタンスを生成し返却
-   *     パースの仕様はhttps://mimesniff.spec.whatwg.org/#parsing-a-mime-type
+   * Parses a string representation of a MIME type.
    * 
-   * @param text 文字列
-   * @returns 生成したインスタンス
+   * @param text - The string to be parsed.
+   * @returns A `MediaType` instance.
+   * @throws {TypeError} The `text` is not contain the [type](https://mimesniff.spec.whatwg.org/#type) of a MIME type.
+   * @throws {TypeError} The extracted [subtype](https://mimesniff.spec.whatwg.org/#subtype) is empty or contains invalid characters.
+   * @throws {TypeError} The extracted parameters contains duplicate parameters.
+   * @see [https://mimesniff.spec.whatwg.org/#parsing-a-mime-type](https://mimesniff.spec.whatwg.org/#parsing-a-mime-type)
    */
   static fromString(text: string): MediaType {
     const trimmedText = StringUtils.trim(text, HTTP_WHITESPACE);
@@ -449,7 +422,7 @@ class MediaType {
     return this.#parameters.entries();
   }
 
-  //XXX sort parameters
+  // XXX sort parameters
 
   /**
    * Determines whether the MIME type represented by this instance is equal to the MIME type represented by other instance.
@@ -510,19 +483,20 @@ class MediaType {
   }
 
   /**
-   * パラメーターを入れ替えた新たなインスタンスを生成し返却
+   * Returns a copy of this instance with the specified parameters.
    * 
-   * @param parameters パラメーターのエントリーの配列
-   * @returns 生成したインスタンス
+   * @param parameters The set of parameter name-value pairs.
+   * @returns A new instance.
+   * @throws {TypeError} The `parameters` contains duplicate parameters.
    */
   withParameters(parameters: Array<MediaTypeParameter>): MediaType {
     return new MediaType(this.#typeName, this.#subtypeName, parameters);
   }
 
   /**
-   * パラメーターを取り除いた新たなインスタンスを生成し返却
+   * Returns a copy of this instance with no parameters.
    * 
-   * @returns 生成したインスタンス
+   * @returns A new instance.
    */
   withoutParameters(): MediaType {
     return new MediaType(this.#typeName, this.#subtypeName);

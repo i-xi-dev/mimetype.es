@@ -36,7 +36,7 @@ describe("MediaType.prototype.equals", () => {
     const i0d = MediaType.fromString("test1/test2;a=X1;b=2;c=3");
     assert.strictEqual(i0.equals(i0, op), true);
     assert.strictEqual(i0.equals(i1, op), true);
-    assert.strictEqual(i0.equals(undefined, op), false);
+    assert.strictEqual(i0.equals(undefined as unknown as MediaType, op), false);
     assert.strictEqual(i0.equals(i2, op), false);
     assert.strictEqual(i0.equals(i3, op), false);
     assert.strictEqual(i0.equals(i4, op), false);
