@@ -2,12 +2,25 @@
 
 A JavaScript MIME type parser and serializer, implements [the MIME type defined in WHATWG MIME Sniffing Standard](https://mimesniff.spec.whatwg.org/#understanding-mime-types).
 
-## `MediaType` class
+
+## Documentation
+
+[https://i-xi-dev.github.io/mimetype.es/](https://i-xi-dev.github.io/mimetype.es/)
 
 
-### Installation
+## Requirement
 
-#### npm
+- Chrome
+- Edge
+- Firefox
+- Safari
+- Deno
+- Node.js
+
+
+## Installation
+
+### npm
 
 ```console
 $ npm i @i-xi-dev/mimetype
@@ -17,23 +30,17 @@ $ npm i @i-xi-dev/mimetype
 import { MediaType } from "@i-xi-dev/mimetype";
 ```
 
+### CDN
 
-#### CDN
-
+Example for Skypack
 ```javascript
 import { MediaType } from "https://cdn.skypack.dev/@i-xi-dev/mimetype";
 ```
 
-```javascript
-import { MediaType } from "https://unpkg.com/@i-xi-dev/mimetype/dist/index.js";
-```
 
-```javascript
-import { MediaType } from "https://cdn.jsdelivr.net/npm/@i-xi-dev/mimetype/dist/index.js";
-```
+## Usage
 
-
-### Usage
+### `MediaType` class
 
 Parse a MIME type string
 ```javascript
