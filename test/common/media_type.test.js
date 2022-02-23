@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { MediaType } from "./media_type";
+import { MediaType } from "../../dist/index.js";
 
 describe("MediaType.prototype.equals", () => {
   it("equals(Object)", () => {
@@ -13,7 +13,7 @@ describe("MediaType.prototype.equals", () => {
     const i0d = MediaType.fromString("test1/test2;a=X1;b=2;c=3");
     expect(i0.equals(i0)).to.equal(true);
     expect(i0.equals(i1)).to.equal(true);
-    expect(i0.equals(undefined as unknown as MediaType)).to.equal(false);
+    expect(i0.equals()).to.equal(false);
     expect(i0.equals(i2)).to.equal(false);
     expect(i0.equals(i3)).to.equal(false);
     expect(i0.equals(i4)).to.equal(false);
@@ -36,7 +36,7 @@ describe("MediaType.prototype.equals", () => {
     const i0d = MediaType.fromString("test1/test2;a=X1;b=2;c=3");
     expect(i0.equals(i0, op)).to.equal(true);
     expect(i0.equals(i1, op)).to.equal(true);
-    expect(i0.equals(undefined as unknown as MediaType, op)).to.equal(false);
+    expect(i0.equals(undefined, op)).to.equal(false);
     expect(i0.equals(i2, op)).to.equal(false);
     expect(i0.equals(i3, op)).to.equal(false);
     expect(i0.equals(i4, op)).to.equal(false);
