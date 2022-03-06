@@ -75,7 +75,7 @@ function collectSubtypeName(input: string): CollectResult {
 /**
  * パラメーター値終端位置
  */
- type PrameterValueEnd = {
+type PrameterValueEnd = {
   /** パラメーター値終端位置のインデックス */
   valueEndIndex: number,
 
