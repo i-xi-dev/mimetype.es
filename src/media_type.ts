@@ -17,17 +17,12 @@ const {
 } = CodePointRange;
 
 /**
- * The string tuple represents a MIME type parameter.
- */
-type MediaTypeParameter = [ name: string, value: string ];
-
-/**
  * 文字列の先頭からメディアタイプのタイプ名を抽出し返却
  * 
  * @param input - 文字列
  * @returns パース結果
  */
-function collectTypeName(input: string): CollectResult {
+function _collectTypeName(input: string): CollectResult {
   const u002FIndex = input.indexOf("/");
   let typeName = "";
   if (u002FIndex >= 0) {
@@ -46,7 +41,7 @@ function collectTypeName(input: string): CollectResult {
  * @param input - 文字列
  * @returns パース結果
  */
-function collectSubtypeName(input: string): CollectResult {
+function _collectSubtypeName(input: string): CollectResult {
   let subtypeName: string;
   let progression: number;
   let followingParameters = false;
@@ -75,7 +70,7 @@ function collectSubtypeName(input: string): CollectResult {
 /**
  * パラメーター値終端位置
  */
-type PrameterValueEnd = {
+type _PrameterValueEnd = {
   /** パラメーター値終端位置のインデックス */
   valueEndIndex: number,
 
@@ -89,7 +84,7 @@ type PrameterValueEnd = {
  * @param input - 文字列
  * @returns パラメーター値終端位置
  */
-function detectPrameterValueEnd(input: string): PrameterValueEnd {
+function _detectPrameterValueEnd(input: string): _PrameterValueEnd {
   let valueEndIndex = -1;
   let parseEnd = false;
   const u003BIndex = input.indexOf(";");
@@ -108,15 +103,22 @@ function detectPrameterValueEnd(input: string): PrameterValueEnd {
   };
 }
 
-/**
- * The `MediaType` equivalent comparison option.
- */
-type MediaTypeCompareOptions = {
+namespace MediaType {
   /**
-   * The set of parameter names that ignores the case of the parameter value.
+   * The string tuple represents a MIME type parameter.
    */
-  caseInsensitiveParameters: Array<string>;
-};
+  export type Parameter = [ name: string, value: string ];
+
+  /**
+   * The `MediaType` equivalent comparison option.
+   */
+  export type CompareOptions = {
+    /**
+     * The set of parameter names that ignores the case of the parameter value.
+     */
+    caseInsensitiveParameters: Array<string>;
+  };
+}
 
 /**
  * The object representation of MIME type.
@@ -153,7 +155,7 @@ class MediaType {
    * @throws {TypeError} The `subtypeName` is empty or contains invalid characters.
    * @throws {TypeError} The `parameters` contains duplicate parameters.
    */
-  private constructor(typeName: string, subtypeName: string, parameters: Array<MediaTypeParameter> = [], original = "") {
+  private constructor(typeName: string, subtypeName: string, parameters: Array<MediaType.Parameter> = [], original = "") {
     if ((typeName.length <= 0) || (matches(typeName, HTTP_TOKEN) !== true)) {
       throw new TypeError("typeName");
     }
@@ -212,7 +214,7 @@ class MediaType {
   }
 
   // static create = Object.freeze({
-  //   applicationType(subtypeName: string, parameters?: Array<MediaTypeParameter>): MediaType {
+  //   applicationType(subtypeName: string, parameters?: Array<MediaType.Parameter>): MediaType {
   //     return new MediaType("application", subtypeName, parameters);
   //   },
   //   audio,example,font,image,message,model,multipart,text,video
@@ -237,7 +239,7 @@ class MediaType {
     // [mimesniff 4.4.]-1,2 削除済
 
     // [mimesniff 4.4.]-3
-    const { collected: typeName, progression: typeNameLength } = collectTypeName(work);
+    const { collected: typeName, progression: typeNameLength } = _collectTypeName(work);
     if (typeNameLength <= 0) {
       throw new TypeError("typeName");
     }
@@ -249,7 +251,7 @@ class MediaType {
     i = i + typeNameLength + 1;
 
     // [mimesniff 4.4.]-7,8
-    const { collected: subtypeName, progression: subtypeNameEnd, following } = collectSubtypeName(work);
+    const { collected: subtypeName, progression: subtypeNameEnd, following } = _collectSubtypeName(work);
     work = (following === true) ? work.substring(subtypeNameEnd) : "";
     i = i + subtypeNameEnd;
 
@@ -262,7 +264,7 @@ class MediaType {
     }
 
     // [mimesniff 4.4.]-11
-    const parameterEntries: Array<MediaTypeParameter> = [];
+    const parameterEntries: Array<MediaType.Parameter> = [];
     while (work.length > 0) {
       // [mimesniff 4.4.]-11.1
       work = work.substring(1);
@@ -327,13 +329,13 @@ class MediaType {
         parameterValue = collected;
 
         // [mimesniff 4.4.]-11.8.2
-        const { valueEndIndex, parseEnd } = detectPrameterValueEnd(work);
+        const { valueEndIndex, parseEnd } = _detectPrameterValueEnd(work);
         work = (parseEnd === true) ? "" : work.substring(valueEndIndex);
         i = i + valueEndIndex;
       }
       else {
         // [mimesniff 4.4.]-11.9.1
-        const { valueEndIndex, parseEnd } = detectPrameterValueEnd(work);
+        const { valueEndIndex, parseEnd } = _detectPrameterValueEnd(work);
         parameterValue = work.substring(0, valueEndIndex);
         work = (parseEnd === true) ? "" : work.substring(valueEndIndex);
         i = i + valueEndIndex;
@@ -423,7 +425,7 @@ class MediaType {
    * 
    * @returns A new iterator object.
    */
-  parameters(): IterableIterator<MediaTypeParameter> {
+  parameters(): IterableIterator<MediaType.Parameter> {
     return this.#parameters.entries();
   }
 
@@ -433,17 +435,17 @@ class MediaType {
    * Determines whether the MIME type represented by this instance is equal to the MIME type represented by other instance.
    * 
    * @param other - The other instance of `MediaType`.
-   * @param options - The `MediaTypeCompareOptions` dictionary.
+   * @param options - The `MediaType.CompareOptions` dictionary.
    * @returns If two MIME types are equal, `true`; Otherwise, `false`.
    */
-  equals(other: MediaType, options?: MediaTypeCompareOptions): boolean { // TODO
+  equals(other: MediaType, options?: MediaType.CompareOptions): boolean { // TODO
     if (other instanceof MediaType) {
       if (options && Array.isArray(options.caseInsensitiveParameters)) {
         const thisParams = [ ...this.parameters() ].map(([ paramName, paramValue ]) => {
           return [
             paramName,
             options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
-          ] as MediaTypeParameter;
+          ] as MediaType.Parameter;
         });
         const thisClone = new MediaType(this.type, this.subtype, thisParams);
 
@@ -451,7 +453,7 @@ class MediaType {
           return [
             paramName,
             options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
-          ] as MediaTypeParameter;
+          ] as MediaType.Parameter;
         });
         const objClone = new MediaType(other.type, other.subtype, objParams);
 
@@ -494,7 +496,7 @@ class MediaType {
    * @returns A new instance.
    * @throws {TypeError} The `parameters` contains duplicate parameters.
    */
-  withParameters(parameters: Array<MediaTypeParameter>): MediaType {
+  withParameters(parameters: Array<MediaType.Parameter>): MediaType {
     return new MediaType(this.#typeName, this.#subtypeName, parameters);
   }
 
@@ -509,8 +511,4 @@ class MediaType {
 }
 Object.freeze(MediaType);
 
-export {
-  type MediaTypeParameter,
-  type MediaTypeCompareOptions,
-  MediaType,
-};
+export { MediaType };
