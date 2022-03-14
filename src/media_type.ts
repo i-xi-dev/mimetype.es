@@ -183,6 +183,13 @@ class MediaType {
 
   /**
    * The [type](https://mimesniff.spec.whatwg.org/#type) of this MIME type.
+   * 
+   * @example
+   * ```javascript
+   * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
+   * mediaType.type;
+   * // → "application"
+   * ```
    */
   get type(): string {
     return this.#typeName;
@@ -190,13 +197,47 @@ class MediaType {
 
   /**
    * The [subtype](https://mimesniff.spec.whatwg.org/#subtype) of this MIME type.
+   * 
+   * @example
+   * ```javascript
+   * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
+   * mediaType.subtype;
+   * // → "soap+xml"
+   * ```
    */
   get subtype(): string {
     return this.#subtypeName;
   }
 
   /**
+   * The +suffix (structured syntax suffix) of this MIME type.
+   * 
+   * @see [https://www.iana.org/assignments/media-type-structured-suffix](https://www.iana.org/assignments/media-type-structured-suffix)
+   * 
+   * @example
+   * ```javascript
+   * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
+   * mediaType.suffix;
+   * // → "+xml"
+   * ```
+   */
+  get suffix(): string {
+    if (this.subtype.includes("+")) {
+      const subtype = this.subtype;
+      return subtype.substring(subtype.lastIndexOf("+"));
+    }
+    return "";
+  }
+
+  /**
    * The [essence](https://mimesniff.spec.whatwg.org/#mime-type-essence) of this MIME type.
+   * 
+   * @example
+   * ```javascript
+   * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
+   * mediaType.essence;
+   * // → "application/soap+xml"
+   * ```
    */
   get essence(): string {
     return this.#typeName + "/" + this.#subtypeName;

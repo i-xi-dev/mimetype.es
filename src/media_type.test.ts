@@ -357,6 +357,27 @@ describe("MediaType.prototype.subtype", () => {
     const i0b = MediaType.fromString("text/PLAIN");
     expect(i0b.subtype).to.equal("plain");
 
+    const i0c = MediaType.fromString("image/svg+xml");
+    expect(i0c.subtype).to.equal("svg+xml");
+
+  });
+
+});
+
+describe("MediaType.prototype.suffix", () => {
+  it("suffix", () => {
+    const i0 = MediaType.fromString("text/plain");
+    expect(i0.suffix).to.equal("");
+
+    const i0b = MediaType.fromString("text/PLAIN");
+    expect(i0b.suffix).to.equal("");
+
+    const i0c = MediaType.fromString("image/svg+xml");
+    expect(i0c.suffix).to.equal("+xml");
+
+    const i0d = MediaType.fromString("example/aaa+bbb+ccc");
+    expect(i0d.suffix).to.equal("+ccc");
+
   });
 
 });
