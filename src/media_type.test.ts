@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { MediaType } from "./media_type";
+import { MediaType } from "./index";
 
 describe("MediaType.prototype.equals", () => {
   it("equals(Object)", () => {
