@@ -1,20 +1,15 @@
 //
 
 import {
-  type CollectResult,
-  CodePointRange,
-  collectHttpQuotedString,
-  collectStart,
-  matches,
-  trim,
-  trimEnd,
+  HttpUtils,
+  StringUtils,
 } from "@i-xi-dev/fundamental";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,
   HTTP_TOKEN,
   HTTP_WHITESPACE,
-} = CodePointRange;
+} = HttpUtils.CodePointRange;
 
 /**
  * 文字列の先頭からメディアタイプのタイプ名を抽出し返却
@@ -22,7 +17,7 @@ const {
  * @param input - 文字列
  * @returns パース結果
  */
-function _collectTypeName(input: string): CollectResult {
+function _collectTypeName(input: string): HttpUtils.CollectResult {
   const u002FIndex = input.indexOf("/");
   let typeName = "";
   if (u002FIndex >= 0) {
@@ -41,7 +36,7 @@ function _collectTypeName(input: string): CollectResult {
  * @param input - 文字列
  * @returns パース結果
  */
-function _collectSubtypeName(input: string): CollectResult {
+function _collectSubtypeName(input: string): HttpUtils.CollectResult {
   let subtypeName: string;
   let progression: number;
   let followingParameters = false;
@@ -58,7 +53,7 @@ function _collectSubtypeName(input: string): CollectResult {
     progression = input.length;
   }
 
-  subtypeName = trimEnd(subtypeName, HTTP_WHITESPACE);
+  subtypeName = StringUtils.trimEnd(subtypeName, HTTP_WHITESPACE);
 
   return {
     collected: subtypeName,
@@ -156,10 +151,10 @@ class MediaType {
    * @throws {TypeError} The `parameters` contains duplicate parameters.
    */
   private constructor(typeName: string, subtypeName: string, parameters: Array<MediaType.Parameter> = [], original = "") {
-    if ((typeName.length <= 0) || (matches(typeName, HTTP_TOKEN) !== true)) {
+    if ((typeName.length <= 0) || (StringUtils.matches(typeName, HTTP_TOKEN) !== true)) {
       throw new TypeError("typeName");
     }
-    if ((subtypeName.length <= 0) || (matches(subtypeName, HTTP_TOKEN) !== true)) {
+    if ((subtypeName.length <= 0) || (StringUtils.matches(subtypeName, HTTP_TOKEN) !== true)) {
       throw new TypeError("subtypeName");
     }
 
@@ -276,7 +271,7 @@ class MediaType {
    * @see [https://mimesniff.spec.whatwg.org/#parsing-a-mime-type](https://mimesniff.spec.whatwg.org/#parsing-a-mime-type)
    */
   static fromString(text: string): MediaType {
-    const trimmedText = trim(text, HTTP_WHITESPACE);
+    const trimmedText = StringUtils.trim(text, HTTP_WHITESPACE);
 
     let work = trimmedText;
     let i = 0;
@@ -316,7 +311,7 @@ class MediaType {
       i = i + 1;
 
       // [mimesniff 4.4.]-11.2
-      const startHttpSpaces2 = collectStart(work, HTTP_WHITESPACE);
+      const startHttpSpaces2 = StringUtils.collectStart(work, HTTP_WHITESPACE);
       work = work.substring(startHttpSpaces2.length);
       i = i + startHttpSpaces2.length;
 
@@ -368,7 +363,7 @@ class MediaType {
 
       if (work.startsWith('"')) {
         // [mimesniff 4.4.]-11.8.1
-        const { collected, progression } = collectHttpQuotedString(work);
+        const { collected, progression } = HttpUtils.collectHttpQuotedString(work);
         work = work.substring(progression);
         i = i + progression;
         parameterValue = collected;
@@ -386,7 +381,7 @@ class MediaType {
         i = i + valueEndIndex;
 
         // [mimesniff 4.4.]-11.9.2
-        parameterValue = trimEnd(parameterValue, HTTP_WHITESPACE);
+        parameterValue = StringUtils.trimEnd(parameterValue, HTTP_WHITESPACE);
 
         // [mimesniff 4.4.]-11.9.3
         if (parameterValue.length <= 0) {
@@ -398,10 +393,10 @@ class MediaType {
       if (parameterName.length <= 0) {
         continue;
       }
-      if (matches(parameterName, HTTP_TOKEN) !== true) {
+      if (StringUtils.matches(parameterName, HTTP_TOKEN) !== true) {
         continue;
       }
-      if (matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !== true) {
+      if (StringUtils.matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !== true) {
         continue;
       }
       if (parameterEntries.some((param) => param[0] === parameterName)) {
@@ -426,7 +421,7 @@ class MediaType {
       parameters = parameters + ";" + parameterName + "=";
 
       const parameterValue = this.#parameters.get(parameterName) as string;
-      if (matches(parameterValue, HTTP_TOKEN) !== true) {
+      if (StringUtils.matches(parameterValue, HTTP_TOKEN) !== true) {
         // parameters = parameters + '"' + parameterValue.replaceAll("\\", "\\\\").replaceAll('"', '\\"') + '"';
         parameters = parameters + '"' + parameterValue.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
       }
