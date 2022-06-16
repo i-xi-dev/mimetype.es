@@ -1,9 +1,8 @@
 //
 
-import {
-  HttpUtils,
-  StringUtils,
-} from "@i-xi-dev/fundamental";
+import { StringUtils } from "i-xi-dev/fundamental.es/string";
+
+import { HttpUtils } from "i-xi-dev/fundamental.es/http";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,
@@ -13,7 +12,7 @@ const {
 
 /**
  * 文字列の先頭からメディアタイプのタイプ名を抽出し返却
- * 
+ *
  * @param input - 文字列
  * @returns パース結果
  */
@@ -32,7 +31,7 @@ function _collectTypeName(input: string): HttpUtils.CollectResult {
 
 /**
  * 文字列の先頭からメディアタイプのサブタイプ名を抽出し返却
- * 
+ *
  * @param input - 文字列
  * @returns パース結果
  */
@@ -46,8 +45,7 @@ function _collectSubtypeName(input: string): HttpUtils.CollectResult {
     subtypeName = input.substring(0, u003BIndex);
     progression = u003BIndex;
     followingParameters = true;
-  }
-  else {
+  } else {
     // パラメーター無し
     subtypeName = input;
     progression = input.length;
@@ -67,15 +65,15 @@ function _collectSubtypeName(input: string): HttpUtils.CollectResult {
  */
 type _PrameterValueEnd = {
   /** パラメーター値終端位置のインデックス */
-  valueEndIndex: number,
+  valueEndIndex: number;
 
   /** 後続がパース不可能（または不要）であるか否か */
-  parseEnd: boolean,
+  parseEnd: boolean;
 };
 
 /**
  * 文字列の先頭からメディアタイプのパラメーター値終端位置を抽出し返却
- * 
+ *
  * @param input - 文字列
  * @returns パラメーター値終端位置
  */
@@ -102,7 +100,7 @@ namespace MediaType {
   /**
    * The string tuple represents a MIME type parameter.
    */
-  export type Parameter = [ name: string, value: string ];
+  export type Parameter = [name: string, value: string];
 
   /**
    * The `MediaType` equivalent comparison option.
@@ -150,11 +148,22 @@ class MediaType {
    * @throws {TypeError} The `subtypeName` is empty or contains invalid characters.
    * @throws {TypeError} The `parameters` contains duplicate parameters.
    */
-  private constructor(typeName: string, subtypeName: string, parameters: Array<MediaType.Parameter> = [], original = "") {
-    if ((typeName.length <= 0) || (StringUtils.matches(typeName, HTTP_TOKEN) !== true)) {
+  private constructor(
+    typeName: string,
+    subtypeName: string,
+    parameters: Array<MediaType.Parameter> = [],
+    original = "",
+  ) {
+    if (
+      (typeName.length <= 0) ||
+      (StringUtils.matches(typeName, HTTP_TOKEN) !== true)
+    ) {
       throw new TypeError("typeName");
     }
-    if ((subtypeName.length <= 0) || (StringUtils.matches(subtypeName, HTTP_TOKEN) !== true)) {
+    if (
+      (subtypeName.length <= 0) ||
+      (StringUtils.matches(subtypeName, HTTP_TOKEN) !== true)
+    ) {
       throw new TypeError("subtypeName");
     }
 
@@ -178,11 +187,11 @@ class MediaType {
 
   /**
    * The [type](https://mimesniff.spec.whatwg.org/#type) of this MIME type.
-   * 
+   *
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.type;
    * // → "application"
    * ```
@@ -193,11 +202,11 @@ class MediaType {
 
   /**
    * The [subtype](https://mimesniff.spec.whatwg.org/#subtype) of this MIME type.
-   * 
+   *
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.subtype;
    * // → "soap+xml"
    * ```
@@ -208,13 +217,13 @@ class MediaType {
 
   /**
    * The +suffix (structured syntax suffix) of this MIME type.
-   * 
+   *
    * @see [https://www.iana.org/assignments/media-type-structured-suffix](https://www.iana.org/assignments/media-type-structured-suffix)
-   * 
+   *
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.suffix;
    * // → "+xml"
    * ```
@@ -229,11 +238,11 @@ class MediaType {
 
   /**
    * The [essence](https://mimesniff.spec.whatwg.org/#mime-type-essence) of this MIME type.
-   * 
+   *
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.essence;
    * // → "application/soap+xml"
    * ```
@@ -262,7 +271,7 @@ class MediaType {
 
   /**
    * Parses a string representation of a MIME type.
-   * 
+   *
    * @param text - The string to be parsed.
    * @returns A `MediaType` instance.
    * @throws {TypeError} The `text` is not contain the [type](https://mimesniff.spec.whatwg.org/#type) of a MIME type.
@@ -279,7 +288,8 @@ class MediaType {
     // [mimesniff 4.4.]-1,2 削除済
 
     // [mimesniff 4.4.]-3
-    const { collected: typeName, progression: typeNameLength } = _collectTypeName(work);
+    const { collected: typeName, progression: typeNameLength } =
+      _collectTypeName(work);
     if (typeNameLength <= 0) {
       throw new TypeError("typeName");
     }
@@ -291,7 +301,8 @@ class MediaType {
     i = i + typeNameLength + 1;
 
     // [mimesniff 4.4.]-7,8
-    const { collected: subtypeName, progression: subtypeNameEnd, following } = _collectSubtypeName(work);
+    const { collected: subtypeName, progression: subtypeNameEnd, following } =
+      _collectSubtypeName(work);
     work = (following === true) ? work.substring(subtypeNameEnd) : "";
     i = i + subtypeNameEnd;
 
@@ -300,7 +311,12 @@ class MediaType {
     // [mimesniff 4.4.]-10 はコンストラクターで行う
 
     if (work.length <= 0) {
-      return new MediaType(typeName, subtypeName, [], trimmedText.substring(0, i));
+      return new MediaType(
+        typeName,
+        subtypeName,
+        [],
+        trimmedText.substring(0, i),
+      );
     }
 
     // [mimesniff 4.4.]-11
@@ -322,19 +338,16 @@ class MediaType {
       let delimIndex = -1;
       if ((u003BIndex >= 0) && (u003DIndex >= 0)) {
         delimIndex = Math.min(u003BIndex, u003DIndex);
-      }
-      else if (u003BIndex >= 0) {
+      } else if (u003BIndex >= 0) {
         delimIndex = u003BIndex;
-      }
-      else if (u003DIndex >= 0) {
+      } else if (u003DIndex >= 0) {
         delimIndex = u003DIndex;
       }
 
       let parameterName: string;
       if (delimIndex >= 0) {
         parameterName = work.substring(0, delimIndex);
-      }
-      else {
+      } else {
         parameterName = work;
       }
       work = work.substring(parameterName.length);
@@ -363,7 +376,9 @@ class MediaType {
 
       if (work.startsWith('"')) {
         // [mimesniff 4.4.]-11.8.1
-        const { collected, progression } = HttpUtils.collectHttpQuotedString(work);
+        const { collected, progression } = HttpUtils.collectHttpQuotedString(
+          work,
+        );
         work = work.substring(progression);
         i = i + progression;
         parameterValue = collected;
@@ -372,8 +387,7 @@ class MediaType {
         const { valueEndIndex, parseEnd } = _detectPrameterValueEnd(work);
         work = (parseEnd === true) ? "" : work.substring(valueEndIndex);
         i = i + valueEndIndex;
-      }
-      else {
+      } else {
         // [mimesniff 4.4.]-11.9.1
         const { valueEndIndex, parseEnd } = _detectPrameterValueEnd(work);
         parameterValue = work.substring(0, valueEndIndex);
@@ -396,7 +410,9 @@ class MediaType {
       if (StringUtils.matches(parameterName, HTTP_TOKEN) !== true) {
         continue;
       }
-      if (StringUtils.matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !== true) {
+      if (
+        StringUtils.matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !== true
+      ) {
         continue;
       }
       if (parameterEntries.some((param) => param[0] === parameterName)) {
@@ -408,11 +424,16 @@ class MediaType {
       ]);
     }
 
-    return new MediaType(typeName, subtypeName, parameterEntries, trimmedText.substring(0, i));
+    return new MediaType(
+      typeName,
+      subtypeName,
+      parameterEntries,
+      trimmedText.substring(0, i),
+    );
   }
 
   #format(sortParameters = false): string {
-    const parameterNames = [ ...this.#parameters.keys() ];
+    const parameterNames = [...this.#parameters.keys()];
     if (sortParameters === true) {
       parameterNames.sort();
     }
@@ -423,9 +444,9 @@ class MediaType {
       const parameterValue = this.#parameters.get(parameterName) as string;
       if (StringUtils.matches(parameterValue, HTTP_TOKEN) !== true) {
         // parameters = parameters + '"' + parameterValue.replaceAll("\\", "\\\\").replaceAll('"', '\\"') + '"';
-        parameters = parameters + '"' + parameterValue.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
-      }
-      else {
+        parameters = parameters + '"' +
+          parameterValue.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+      } else {
         parameters = parameters + parameterValue;
       }
     }
@@ -434,13 +455,13 @@ class MediaType {
 
   /**
    * Returns a serialized string representation.
-   * 
+   *
    * @override
    * @returns A serialized string representation.
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.toString();
    * // → 'application/soap+xml;charset=utf-8;action="https://example.com/example"'
    * ```
@@ -451,12 +472,12 @@ class MediaType {
 
   /**
    * Returns a serialized string representation.
-   * 
+   *
    * @returns A serialized string representation.
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.toJSON();
    * // → 'application/soap+xml;charset=utf-8;action="https://example.com/example"'
    * ```
@@ -467,12 +488,12 @@ class MediaType {
 
   /**
    * Returns a new iterator object that contains the names for each parameter in this MIME type.
-   * 
+   *
    * @returns A new iterator object.
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * [ ...mediaType.parameterNames() ];
    * // → [ "charset", "action" ]
    * ```
@@ -483,12 +504,12 @@ class MediaType {
 
   /**
    * Returns a new iterator object that contains the name-value pairs for each parameter in this MIME type.
-   * 
+   *
    * @returns A new iterator object.
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * [ ...mediaType.parameters() ];
    * // → [ ["charset", "utf-8"], ["action", "https://example.com/example"] ]
    * ```
@@ -501,22 +522,22 @@ class MediaType {
 
   /**
    * Determines whether the MIME type represented by this instance is equal to the MIME type represented by other instance.
-   * 
+   *
    * @param other - The other instance of `MediaType`.
    * @param options - The `MediaType.CompareOptions` dictionary.
    * @returns If two MIME types are equal, `true`; Otherwise, `false`.
    * @example
    * ```javascript
    * const mediaTypeA = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * const mediaTypeB = MediaType.fromString('application/soap+xml; charset=utf-16;action="https://example.com/example"');
    * mediaTypeA.equals(mediaTypeB);
    * // → false
-   * 
+   *
    * const mediaTypeC = MediaType.fromString('APPLICATION/SOAP+XML;ACTION="https://example.com/example";CHARSET=utf-8');
    * mediaTypeA.equals(mediaTypeC);
    * // → true
-   * 
+   *
    * const mediaTypeD = MediaType.fromString('application/soap+xml; charset=UTF-8;action="https://example.com/example"');
    * mediaTypeA.equals(mediaTypeD);
    * // → false
@@ -527,20 +548,28 @@ class MediaType {
   equals(other: MediaType, options?: MediaType.CompareOptions): boolean { // TODO
     if (other instanceof MediaType) {
       if (options && Array.isArray(options.caseInsensitiveParameters)) {
-        const thisParams = [ ...this.parameters() ].map(([ paramName, paramValue ]) => {
-          return [
-            paramName,
-            options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
-          ] as MediaType.Parameter;
-        });
+        const thisParams = [...this.parameters()].map(
+          ([paramName, paramValue]) => {
+            return [
+              paramName,
+              options.caseInsensitiveParameters.includes(paramName)
+                ? paramValue.toLowerCase()
+                : paramValue,
+            ] as MediaType.Parameter;
+          },
+        );
         const thisClone = new MediaType(this.type, this.subtype, thisParams);
 
-        const objParams = [ ...other.parameters() ].map(([ paramName, paramValue ]) => {
-          return [
-            paramName,
-            options.caseInsensitiveParameters.includes(paramName) ? paramValue.toLowerCase() : paramValue,
-          ] as MediaType.Parameter;
-        });
+        const objParams = [...other.parameters()].map(
+          ([paramName, paramValue]) => {
+            return [
+              paramName,
+              options.caseInsensitiveParameters.includes(paramName)
+                ? paramValue.toLowerCase()
+                : paramValue,
+            ] as MediaType.Parameter;
+          },
+        );
         const objClone = new MediaType(other.type, other.subtype, objParams);
 
         return (thisClone.#format(true) === objClone.#format(true));
@@ -552,16 +581,16 @@ class MediaType {
 
   /**
    * Returns whether this MIME type has the specified parameter.
-   * 
+   *
    * @param parameterName - The parameter name.
    * @returns If this MIME type has the specified parameter, `true`; Otherwise, `false`.
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.hasParameter("charset");
    * // → true
-   * 
+   *
    * mediaType.hasParameter("foo");
    * // → false
    * ```
@@ -573,16 +602,16 @@ class MediaType {
 
   /**
    * Returns a value of a specified parameter of this MIME type.
-   * 
+   *
    * @param parameterName - The parameter name.
    * @returns A parameter value. If the parameter does not exist, `null`.
    * @example
    * ```javascript
    * const mediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * mediaType.getParameterValue("charset");
    * // → "https://example.com/example"
-   * 
+   *
    * mediaType.getParameterValue("foo");
    * // → null
    * ```
@@ -597,18 +626,18 @@ class MediaType {
 
   /**
    * Returns a copy of this instance with the specified parameters.
-   * 
+   *
    * @param parameters The set of parameter name-value pairs.
    * @returns A new instance.
    * @throws {TypeError} The `parameters` contains duplicate parameters.
    * @example
    * ```javascript
    * const sourceMediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * const paramsModifiedClone = sourceMediaType.withParameters([ ["charset": "UTF-16"] ]);
    * paramsModifiedClone.toString();
    * // → 'application/soap+xml;charset=UTF-16'
-   * 
+   *
    * sourceMediaType.toString();
    * // → 'application/soap+xml;charset=utf-8;action="https://example.com/example"'
    * ```
@@ -619,16 +648,16 @@ class MediaType {
 
   /**
    * Returns a copy of this instance with no parameters.
-   * 
+   *
    * @returns A new instance.
    * @example
    * ```javascript
    * const sourceMediaType = MediaType.fromString('application/soap+xml; charset=utf-8;action="https://example.com/example"');
-   * 
+   *
    * const paramsRemovedClone = sourceMediaType.withoutParameters();
    * paramsRemovedClone.toString();
    * // → 'application/soap+xml'
-   * 
+   *
    * sourceMediaType.toString();
    * // → 'application/soap+xml;charset=utf-8;action="https://example.com/example"'
    * ```
