@@ -1,8 +1,8 @@
 //
 
-import { StringUtils } from "i-xi-dev/fundamental.es/string";
+import { StringUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/main/src/string.ts";
 
-import { HttpUtils } from "i-xi-dev/fundamental.es/http";
+import { HttpUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/main/src/http.ts";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,

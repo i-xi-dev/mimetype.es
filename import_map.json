@@ -1,7 +1,5 @@
 {
   "imports": {
-    "std/testing/asserts": "https://deno.land/std@0.138.0/testing/asserts.ts",
-    "i-xi-dev/fundamental.es/string": "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/main/src/string.ts",
-    "i-xi-dev/fundamental.es/http": "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/main/src/http.ts"
+    "std/testing/asserts": "https://deno.land/std@0.138.0/testing/asserts.ts"
   }
 }
