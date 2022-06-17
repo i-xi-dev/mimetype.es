@@ -3,11 +3,6 @@
 A JavaScript MIME type parser and serializer, implements [the MIME type defined in WHATWG MIME Sniffing Standard](https://mimesniff.spec.whatwg.org/#understanding-mime-types).
 
 
-## Documentation
-
-[https://i-xi-dev.github.io/mimetype.es/](https://i-xi-dev.github.io/mimetype.es/)
-
-
 ## Requirement
 
 - Chrome
@@ -40,7 +35,7 @@ import { MediaType } from "https://cdn.skypack.dev/@i-xi-dev/mimetype";
 
 ## Usage
 
-### `MediaType` class
+### [`MediaType`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/mimetype.es/1.1.5/mod.ts/~/MediaType) class
 
 Parse a MIME type string
 ```javascript
