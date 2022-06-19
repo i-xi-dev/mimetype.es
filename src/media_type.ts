@@ -1,8 +1,8 @@
 //
 
-import { StringUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/main/src/string.ts";
+import { StringUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/string.ts";
 
-import { HttpUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/main/src/http.ts";
+import { HttpUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/http.ts";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,
@@ -13,7 +13,7 @@ const {
 /**
  * 文字列の先頭からメディアタイプのタイプ名を抽出し返却
  *
- * @param input - 文字列
+ * @param input 文字列
  * @returns パース結果
  */
 function _collectTypeName(input: string): HttpUtils.CollectResult {
@@ -32,7 +32,7 @@ function _collectTypeName(input: string): HttpUtils.CollectResult {
 /**
  * 文字列の先頭からメディアタイプのサブタイプ名を抽出し返却
  *
- * @param input - 文字列
+ * @param input 文字列
  * @returns パース結果
  */
 function _collectSubtypeName(input: string): HttpUtils.CollectResult {
@@ -74,7 +74,7 @@ type _PrameterValueEnd = {
 /**
  * 文字列の先頭からメディアタイプのパラメーター値終端位置を抽出し返却
  *
- * @param input - 文字列
+ * @param input 文字列
  * @returns パラメーター値終端位置
  */
 function _detectPrameterValueEnd(input: string): _PrameterValueEnd {
@@ -140,10 +140,10 @@ class MediaType {
   #original: string;
 
   /**
-   * @param typeName - The type of the MIME type.
-   * @param subtypeName - The subtype of the MIME type.
-   * @param parameters パラメーターのエントリーの配列
-   * @param original - The original string that was passed to the `fromString` method.
+   * @param typeName The type of the MIME type.
+   * @param subtypeName The subtype of the MIME type.
+   * @param parameters The parameters of the MIME type.
+   * @param original The original string that was passed to the `fromString` method.
    * @throws {TypeError} The `typeName` is empty or contains invalid characters.
    * @throws {TypeError} The `subtypeName` is empty or contains invalid characters.
    * @throws {TypeError} The `parameters` contains duplicate parameters.
@@ -272,7 +272,7 @@ class MediaType {
   /**
    * Parses a string representation of a MIME type.
    *
-   * @param text - The string to be parsed.
+   * @param text The string to be parsed.
    * @returns A `MediaType` instance.
    * @throws {TypeError} The `text` is not contain the [type](https://mimesniff.spec.whatwg.org/#type) of a MIME type.
    * @throws {TypeError} The extracted [subtype](https://mimesniff.spec.whatwg.org/#subtype) is empty or contains invalid characters.
@@ -523,8 +523,8 @@ class MediaType {
   /**
    * Determines whether the MIME type represented by this instance is equal to the MIME type represented by other instance.
    *
-   * @param other - The other instance of `MediaType`.
-   * @param options - The `MediaType.CompareOptions` dictionary.
+   * @param other The other instance of `MediaType`.
+   * @param options The `MediaType.CompareOptions` dictionary.
    * @returns If two MIME types are equal, `true`; Otherwise, `false`.
    * @example
    * ```javascript
@@ -582,7 +582,7 @@ class MediaType {
   /**
    * Returns whether this MIME type has the specified parameter.
    *
-   * @param parameterName - The parameter name.
+   * @param parameterName The parameter name.
    * @returns If this MIME type has the specified parameter, `true`; Otherwise, `false`.
    * @example
    * ```javascript
@@ -603,7 +603,7 @@ class MediaType {
   /**
    * Returns a value of a specified parameter of this MIME type.
    *
-   * @param parameterName - The parameter name.
+   * @param parameterName The parameter name.
    * @returns A parameter value. If the parameter does not exist, `null`.
    * @example
    * ```javascript
