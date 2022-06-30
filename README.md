@@ -35,7 +35,7 @@ import { MediaType } from "https://cdn.skypack.dev/@i-xi-dev/mimetype";
 
 ## Usage
 
-### [`MediaType`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/mimetype.es/1.1.6/mod.ts/~/MediaType) class
+### [`MediaType`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/mimetype.es/1.1.7/mod.ts/~/MediaType) class
 
 Parse a MIME type string
 ```javascript
