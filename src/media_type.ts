@@ -1,6 +1,6 @@
 //
 
-import { StringUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/string.ts";
+import { StringUtils } from "https://raw.githubusercontent.com/i-xi-dev/str.es/1.0.0/mod.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
 
 import { HttpUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/http.ts";
 
