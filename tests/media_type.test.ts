@@ -73,6 +73,11 @@ Deno.test("MediaType.fromString", () => {
   assertStrictEquals(MediaType.fromString("text/plain ;charset=\\ ; test=test2").toString(), "text/plain;charset=\"\\\\\";test=test2");
   assertStrictEquals(MediaType.fromString("text/plain ;charset=\"\\ ; test=test2").toString(), "text/plain;charset=\" ; test=test2\"");
   assertStrictEquals(MediaType.fromString("text/plain ;charset=\" ; test=test2").toString(), "text/plain;charset=\" ; test=test2\"");
+
+//TODO
+const xx = MediaType.fromString("text/plain ;charset=\"\" ; test=test2");
+console.log([...xx.parameters()])
+
   assertStrictEquals(MediaType.fromString("text/plain ;charset=\"\" ; test=test2").toString(), "text/plain;charset=;test=test2");
   assertStrictEquals(MediaType.fromString('text/plain ;charset="utf-16" utf-8 ; test=test2').toString(), "text/plain;charset=utf-16;test=test2");
   assertStrictEquals(MediaType.fromString("text/plain ;charset=\"\\").toString(), "text/plain;charset=\"\\\\\"");

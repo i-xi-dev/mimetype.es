@@ -5,12 +5,9 @@ A JavaScript MIME type parser and serializer, implements [the MIME type defined 
 
 ## Requirement
 
-- Chrome
-- Edge
-- Firefox
-- Safari
-- Deno
-- Node.js
+| Chrome | Edge | Firefox | Safari | Deno | Node.js |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 
 ## Installation

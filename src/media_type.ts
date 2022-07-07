@@ -1,14 +1,12 @@
 //
 
-import { StringUtils } from "https://raw.githubusercontent.com/i-xi-dev/str.es/1.0.0/mod.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
-
-import { HttpUtils } from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/http.ts";
+import { HttpUtils, StringUtils } from "./deps.ts";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,
   HTTP_TOKEN,
   HTTP_WHITESPACE,
-} = HttpUtils.CodePointRange;
+} = HttpUtils.Pattern;
 
 /**
  * 文字列の先頭からメディアタイプのタイプ名を抽出し返却
@@ -154,16 +152,10 @@ class MediaType {
     parameters: Array<MediaType.Parameter> = [],
     original = "",
   ) {
-    if (
-      (typeName.length <= 0) ||
-      (StringUtils.matches(typeName, HTTP_TOKEN) !== true)
-    ) {
+    if (StringUtils.matches(typeName, HTTP_TOKEN) !== true) {
       throw new TypeError("typeName");
     }
-    if (
-      (subtypeName.length <= 0) ||
-      (StringUtils.matches(subtypeName, HTTP_TOKEN) !== true)
-    ) {
+    if (StringUtils.matches(subtypeName, HTTP_TOKEN) !== true) {
       throw new TypeError("subtypeName");
     }
 
@@ -404,14 +396,12 @@ class MediaType {
       }
 
       // [mimesniff 4.4.]-11.10
-      if (parameterName.length <= 0) {
-        continue;
-      }
       if (StringUtils.matches(parameterName, HTTP_TOKEN) !== true) {
         continue;
       }
       if (
-        StringUtils.matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !== true
+        (StringUtils.matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !==
+          true) && (parameterValue.length > 0)
       ) {
         continue;
       }
@@ -442,12 +432,14 @@ class MediaType {
       parameters = parameters + ";" + parameterName + "=";
 
       const parameterValue = this.#parameters.get(parameterName) as string;
-      if (StringUtils.matches(parameterValue, HTTP_TOKEN) !== true) {
-        // parameters = parameters + '"' + parameterValue.replaceAll("\\", "\\\\").replaceAll('"', '\\"') + '"';
-        parameters = parameters + '"' +
-          parameterValue.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
-      } else {
+      if (
+        (StringUtils.matches(parameterValue, HTTP_TOKEN) === true) ||
+        (parameterValue.length === 0)
+      ) {
         parameters = parameters + parameterValue;
+      } else {
+        parameters = parameters + '"' +
+          parameterValue.replaceAll("\\", "\\\\").replaceAll('"', '\\"') + '"';
       }
     }
     return this.#typeName + "/" + this.#subtypeName + parameters;
