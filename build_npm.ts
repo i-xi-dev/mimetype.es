@@ -16,7 +16,8 @@ await build({
   package: {
     name: "@i-xi-dev/mimetype",
     version: "1.1.9",
-    description: "A JavaScript MIME type parser and serializer, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
+    description:
+      "A JavaScript MIME type parser and serializer, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
     license: "MIT",
     author: "i-xi-dev",
     homepage: "https://github.com/i-xi-dev/mimetype.es#readme",
@@ -30,20 +31,20 @@ await build({
     ],
     repository: {
       type: "git",
-      url: "git+https://github.com/i-xi-dev/mimetype.es.git"
+      url: "git+https://github.com/i-xi-dev/mimetype.es.git",
     },
     bugs: {
-      url: "https://github.com/i-xi-dev/mimetype.es/issues"
+      url: "https://github.com/i-xi-dev/mimetype.es/issues",
     },
     publishConfig: {
-      access: "public"
+      access: "public",
     },
     files: [
       "esm",
-      "types"
+      "types",
     ],
   },
-  importMap: "./import_map.json"
+  importMap: "./import_map.json",
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
