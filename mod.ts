@@ -1,5 +1,6 @@
 import { StringUtils } from "https://raw.githubusercontent.com/i-xi-dev/str.es/1.0.5/mod.ts";
-import { HttpUtils } from "https://raw.githubusercontent.com/i-xi-dev/http-utils.es/2.0.3/mod.ts";
+import { HttpUtils } from "https://raw.githubusercontent.com/i-xi-dev/http-utils.es/2.1.0/mod.ts";
+import { Http } from "https://raw.githubusercontent.com/i-xi-dev/http.es/1.0.0/mod.ts";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,
@@ -655,6 +656,75 @@ class MediaType {
    */
   withoutParameters(): MediaType {
     return new MediaType(this.#typeName, this.#subtypeName);
+  }
+
+  // (await Body.blob()).type と同じになるはず？
+  /**
+   * @experimental
+   * @param headers The `Headers` object of `Request` or `Response`.
+   * @returns A `MediaType` instance.
+   * @see {@link https://fetch.spec.whatwg.org/#content-type-header `Content-Type` header (Fetch standard)}
+   */
+  static fromHeaders(headers: Headers): MediaType {
+    const CHARSET = "charset";
+
+    // 5.
+    if (headers.has(Http.Header.CONTENT_TYPE) !== true) {
+      throw new Error("Content-Type field not found");
+    }
+
+    // 4, 5.
+    const typesString = headers.get(Http.Header.CONTENT_TYPE) as string;
+    const typeStrings = HttpUtils.valuesOfHeaderFieldValue(typesString);
+    if (typeStrings.length <= 0) {
+      throw new Error("Content-Type value not found");
+    }
+
+    // 1, 2, 3.
+    let textEncoding = "";
+    let mediaTypeEssence = "";
+    let mediaType: MediaType | null = null;
+    // 6.
+    for (const typeString of typeStrings) {
+      try {
+        // 6.1.
+        const tempMediaType = MediaType.fromString(typeString);
+
+        // 6.3.
+        mediaType = tempMediaType;
+
+        // 6.4.
+        if (mediaTypeEssence !== mediaType.essence) {
+          // 6.4.1.
+          textEncoding = "";
+          // 6.4.2.
+          if (mediaType.hasParameter(CHARSET)) {
+            textEncoding = mediaType.getParameterValue(CHARSET) as string;
+          }
+          // 6.4.3.
+          mediaTypeEssence = mediaType.essence;
+        } else {
+          // 6.5.
+          if (
+            (mediaType.hasParameter(CHARSET) !== true) &&
+            (textEncoding !== "")
+          ) {
+            // TODO mediaType.withParameters()
+          }
+        }
+      } catch (exception) {
+        console.log(exception); // TODO 消す
+        // 6.2. "*/*"はMediaType.fromStringでエラーにしている
+        continue;
+      }
+    }
+
+    // 7, 8.
+    if (mediaType !== null) {
+      return mediaType;
+    } else {
+      throw new Error("extraction failure");
+    }
   }
 }
 Object.freeze(MediaType);

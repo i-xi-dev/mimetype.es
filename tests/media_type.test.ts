@@ -1,8 +1,7 @@
 import { assertStrictEquals, assertThrows } from "std/testing/asserts";
 import { MediaType } from "../mod.ts";
 
-Deno.test("MediaType.prototype.equals", () => {
-  // equals(Object)
+Deno.test("MediaType.prototype.equals(Object)", () => {
   const i0A = MediaType.fromString("test1/test2;a=x1;b=2;c=3");
   const i1A = MediaType.fromString("test1/test2;b=2;c=3;a=x1");
   const i2A = MediaType.fromString("test2/test2;a=x1;b=2;c=3");
@@ -20,8 +19,9 @@ Deno.test("MediaType.prototype.equals", () => {
   assertStrictEquals(i0A.equals(i0Ab), true);
   assertStrictEquals(i0A.equals(i0Ac), true);
   assertStrictEquals(i0A.equals(i0Ad), false);
+});
 
-  // equals(Object, Object)
+Deno.test("MediaType.prototype.equals(Object, Object)", () => {
   const opB = { caseInsensitiveParameters: ["a"] };
 
   const i0B = MediaType.fromString("test1/test2;a=x1;b=2;c=3");
@@ -44,13 +44,11 @@ Deno.test("MediaType.prototype.equals", () => {
 });
 
 Deno.test("MediaType.prototype.essence", () => {
-  // essence
   const i0 = MediaType.fromString("text/plain;charset=utf-8");
   assertStrictEquals(i0.essence, "text/plain");
 });
 
-Deno.test("MediaType.fromString", () => {
-  // fromString(string)
+Deno.test("MediaType.fromString(string)", () => {
   assertStrictEquals(
     MediaType.fromString("text/plain").toString(),
     "text/plain",
@@ -674,8 +672,7 @@ Deno.test("MediaType.fromString", () => {
   );
 });
 
-Deno.test("MediaType.prototype.getParameterValue", () => {
-  // getParameterValue(string)
+Deno.test("MediaType.prototype.getParameterValue(string)", () => {
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.getParameterValue("charset"), null);
 
@@ -695,8 +692,7 @@ Deno.test("MediaType.prototype.getParameterValue", () => {
   assertStrictEquals(i5.getParameterValue("charset"), "uTf-8 ");
 });
 
-Deno.test("MediaType.prototype.hasParameter", () => {
-  // hasParameter(string)
+Deno.test("MediaType.prototype.hasParameter(string)", () => {
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.hasParameter("charset"), false);
 
@@ -711,7 +707,6 @@ Deno.test("MediaType.prototype.hasParameter", () => {
 });
 
 Deno.test("MediaType.prototype.originalString", () => {
-  // originalString
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.originalString, "text/plain");
 
@@ -727,8 +722,7 @@ Deno.test("MediaType.prototype.originalString", () => {
   );
 });
 
-Deno.test("MediaType.prototype.parameterNames", () => {
-  // parameterNames()
+Deno.test("MediaType.prototype.parameterNames()", () => {
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(JSON.stringify([...i0.parameterNames()]), "[]");
 
@@ -754,8 +748,7 @@ Deno.test("MediaType.prototype.parameterNames", () => {
   assertStrictEquals(i, 2);
 });
 
-Deno.test("MediaType.prototype.parameters", () => {
-  // parameters()
+Deno.test("MediaType.prototype.parameters()", () => {
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(JSON.stringify([...i0.parameters()]), "[]");
 
@@ -785,7 +778,6 @@ Deno.test("MediaType.prototype.parameters", () => {
 });
 
 Deno.test("MediaType.prototype.subtype", () => {
-  // subtype
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.subtype, "plain");
 
@@ -797,7 +789,6 @@ Deno.test("MediaType.prototype.subtype", () => {
 });
 
 Deno.test("MediaType.prototype.suffix", () => {
-  // suffix
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.suffix, "");
 
@@ -811,8 +802,7 @@ Deno.test("MediaType.prototype.suffix", () => {
   assertStrictEquals(i0d.suffix, "+ccc");
 });
 
-Deno.test("MediaType.prototype.toJSON", () => {
-  // toJSON()
+Deno.test("MediaType.prototype.toJSON()", () => {
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.toJSON(), "text/plain");
 
@@ -822,8 +812,7 @@ Deno.test("MediaType.prototype.toJSON", () => {
   );
 });
 
-Deno.test("MediaType.prototype.toString", () => {
-  // toString()
+Deno.test("MediaType.prototype.toString()", () => {
   const i0 = MediaType.fromString("text/PLAIN");
   assertStrictEquals(i0.toString(), "text/plain");
 
@@ -847,13 +836,11 @@ Deno.test("MediaType.prototype.toString", () => {
 });
 
 Deno.test("MediaType.prototype.type", () => {
-  // type
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.type, "text");
 });
 
-Deno.test("MediaType.prototype.withParameters", () => {
-  // withParameters(Array)
+Deno.test("MediaType.prototype.withParameters(Array)", () => {
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.withParameters([]).toString(), "text/plain");
 
@@ -890,8 +877,7 @@ Deno.test("MediaType.prototype.withParameters", () => {
   );
 });
 
-Deno.test("MediaType.prototype.withoutParameters", () => {
-  // withoutParameters()
+Deno.test("MediaType.prototype.withoutParameters()", () => {
   const i0 = MediaType.fromString("text/plain");
   assertStrictEquals(i0.withoutParameters().toString(), "text/plain");
 
@@ -910,4 +896,36 @@ Deno.test("MediaType.prototype.withoutParameters", () => {
   const i5 = MediaType.fromString('text/plain;  charset="uTf-8 "; x=9');
   assertStrictEquals(i5.withoutParameters().toString(), "text/plain");
   assertStrictEquals(i5.toString(), 'text/plain;charset="uTf-8 ";x=9');
+});
+
+Deno.test("MediaType.fromHeaders(Headers)", () => {
+  const h1 = new Headers({ "content-type": "text/plain" });
+  const i1 = MediaType.fromHeaders(h1);
+  assertStrictEquals(i1.toString(), "text/plain");
+
+  const h2 = new Headers();
+  h2.append("content-type", "text/plain");
+  const i2 = MediaType.fromHeaders(h2);
+  assertStrictEquals(i2.toString(), "text/plain");
+  h2.append("content-type", "text/html");
+  const i2b = MediaType.fromHeaders(h2);
+  assertStrictEquals(i2b.toString(), "text/html");
+
+  const h3 = new Headers();
+  assertThrows(
+    () => {
+      MediaType.fromHeaders(h3);
+    },
+    Error,
+    "Content-Type field not found",
+  );
+
+  const h4 = new Headers({ "content-type": "" });
+  assertThrows(
+    () => {
+      MediaType.fromHeaders(h4);
+    },
+    Error,
+    "Content-Type value not found",
+  );
 });
