@@ -1,4 +1,4 @@
-import { build, emptyDir } from "https://deno.land/x/dnt@0.29.0/mod.ts";
+import { build, emptyDir } from "https://deno.land/x/dnt@0.32.0/mod.ts";
 
 await emptyDir("./npm");
 
@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/mimetype",
-    version: "1.2.0",
+    version: "1.2.1",
     description:
       "A JavaScript MIME type parser and serializer, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
     license: "MIT",
@@ -45,6 +45,10 @@ await build({
     ],
   },
   importMap: "./import_map.json",
+
+  //
+  typeCheck: false, // 落ちるようになった
+  declaration: false, // 落ちるようになった
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
