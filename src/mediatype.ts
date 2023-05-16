@@ -1,6 +1,4 @@
-import { StringUtils } from "i-xi-dev/str.es";
-import { HttpUtils } from "i-xi-dev/http-utils.es";
-import { Http } from "i-xi-dev/http.es";
+import { Http, HttpUtils, StringUtils } from "../deps.ts";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,

@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/mimetype",
-    version: "1.2.3",
+    version: "1.2.4",
     description:
       "A JavaScript MIME type parser and serializer, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
     license: "MIT",
@@ -44,7 +44,6 @@ await build({
       "types",
     ],
   },
-  importMap: "./import_map.json",
 
   //
   typeCheck: false, // 落ちるようになった

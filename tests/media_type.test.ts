@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "std/testing/asserts";
+import { assertStrictEquals, assertThrows } from "./deps.ts";
 import { MediaType } from "../mod.ts";
 
 Deno.test("MediaType.prototype.equals(Object)", () => {
