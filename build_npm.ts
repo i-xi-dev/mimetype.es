@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/mimetype",
-    version: "1.2.7",
+    version: "1.2.8",
     description:
       "A JavaScript MIME type parser and serializer, implements the MIME type defined in WHATWG MIME Sniffing Standard.",
     license: "MIT",
