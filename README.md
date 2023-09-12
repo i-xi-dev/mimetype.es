@@ -15,7 +15,7 @@ A JavaScript MIME type parser and serializer, implements [the MIME type defined 
 ### npm
 
 ```console
-$ npm i @i-xi-dev/mimetype@1.2.10
+$ npm i @i-xi-dev/mimetype@1.2.11
 ```
 
 ```javascript
@@ -26,13 +26,13 @@ import { MediaType } from "@i-xi-dev/mimetype";
 
 Example for Skypack
 ```javascript
-import { MediaType } from "https://cdn.skypack.dev/@i-xi-dev/mimetype@1.2.10";
+import { MediaType } from "https://cdn.skypack.dev/@i-xi-dev/mimetype@1.2.11";
 ```
 
 
 ## Usage
 
-### [`MediaType`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/mimetype.es/1.2.10/mod.ts/~/MediaType) class
+### [`MediaType`](https://doc.deno.land/https://raw.githubusercontent.com/i-xi-dev/mimetype.es/1.2.11/mod.ts/~/MediaType) class
 
 Parse a MIME type string
 ```javascript
