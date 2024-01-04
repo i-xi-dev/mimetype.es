@@ -1,4 +1,4 @@
-import { Http, HttpUtils, StringUtils } from "../deps.ts";
+import { Http, HttpUtils, StringEx } from "../deps.ts";
 
 const {
   HTTP_QUOTED_STRING_TOKEN,
@@ -47,7 +47,7 @@ function _collectSubtypeName(input: string): HttpUtils.CollectResult {
     progression = input.length;
   }
 
-  subtypeName = StringUtils.trimEnd(subtypeName, HTTP_WHITESPACE);
+  subtypeName = StringEx.trimEnd(subtypeName, HTTP_WHITESPACE);
 
   return {
     collected: subtypeName,
@@ -92,7 +92,7 @@ function _detectPrameterValueEnd(input: string): _PrameterValueEnd {
   };
 }
 
-namespace MediaType {
+export namespace MediaType {
   /**
    * The string tuple represents a MIME type parameter.
    */
@@ -113,7 +113,7 @@ namespace MediaType {
  * The object representation of MIME type.
  * The `MediaType` instances are immutable.
  */
-class MediaType {
+export class MediaType {
   /**
    * タイプ名
    */
@@ -150,10 +150,10 @@ class MediaType {
     parameters: Array<MediaType.Parameter> = [],
     original = "",
   ) {
-    if (StringUtils.matches(typeName, HTTP_TOKEN) !== true) {
+    if (StringEx.matches(typeName, HTTP_TOKEN) !== true) {
       throw new TypeError("typeName");
     }
-    if (StringUtils.matches(subtypeName, HTTP_TOKEN) !== true) {
+    if (StringEx.matches(subtypeName, HTTP_TOKEN) !== true) {
       throw new TypeError("subtypeName");
     }
 
@@ -270,7 +270,7 @@ class MediaType {
    * @see [https://mimesniff.spec.whatwg.org/#parsing-a-mime-type](https://mimesniff.spec.whatwg.org/#parsing-a-mime-type)
    */
   static fromString(text: string): MediaType {
-    const trimmedText = StringUtils.trim(text, HTTP_WHITESPACE);
+    const trimmedText = StringEx.trim(text, HTTP_WHITESPACE);
 
     let work = trimmedText;
     let i = 0;
@@ -317,7 +317,7 @@ class MediaType {
       i = i + 1;
 
       // [mimesniff 4.4.]-11.2
-      const startHttpSpaces2 = StringUtils.collectStart(work, HTTP_WHITESPACE);
+      const startHttpSpaces2 = StringEx.collectStart(work, HTTP_WHITESPACE);
       work = work.substring(startHttpSpaces2.length);
       i = i + startHttpSpaces2.length;
 
@@ -385,7 +385,7 @@ class MediaType {
         i = i + valueEndIndex;
 
         // [mimesniff 4.4.]-11.9.2
-        parameterValue = StringUtils.trimEnd(parameterValue, HTTP_WHITESPACE);
+        parameterValue = StringEx.trimEnd(parameterValue, HTTP_WHITESPACE);
 
         // [mimesniff 4.4.]-11.9.3
         if (parameterValue.length <= 0) {
@@ -394,11 +394,11 @@ class MediaType {
       }
 
       // [mimesniff 4.4.]-11.10
-      if (StringUtils.matches(parameterName, HTTP_TOKEN) !== true) {
+      if (StringEx.matches(parameterName, HTTP_TOKEN) !== true) {
         continue;
       }
       if (
-        (StringUtils.matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !==
+        (StringEx.matches(parameterValue, HTTP_QUOTED_STRING_TOKEN) !==
           true) && (parameterValue.length > 0)
       ) {
         continue;
@@ -431,7 +431,7 @@ class MediaType {
 
       const parameterValue = this.#parameters.get(parameterName) as string;
       if (
-        (StringUtils.matches(parameterValue, HTTP_TOKEN) === true) ||
+        (StringEx.matches(parameterValue, HTTP_TOKEN) === true) ||
         (parameterValue.length === 0)
       ) {
         parameters = parameters + parameterValue;
@@ -725,6 +725,3 @@ class MediaType {
     }
   }
 }
-Object.freeze(MediaType);
-
-export { MediaType };
